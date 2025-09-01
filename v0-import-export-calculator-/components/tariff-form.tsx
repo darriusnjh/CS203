@@ -1,0 +1,178 @@
+"use client"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Calculator, Ship, Plane, Truck, Calendar, DollarSign } from "lucide-react"
+import { HTSCodeInput } from "@/components/hts-code-input"
+
+interface FormData {
+  htsCode: string
+  shipmentValue: string
+  countryOfOrigin: string
+  countryOfArrival: string
+  modeOfTransport: string
+  entryDate: string
+  loadingDate: string
+}
+
+interface TariffFormProps {
+  formData: FormData
+  onFormDataChange: (data: FormData) => void
+  onCalculate: () => void
+}
+
+export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFormProps) {
+  const countries = [
+    "China",
+    "Mexico",
+    "Canada",
+    "Germany",
+    "Japan",
+    "United Kingdom",
+    "South Korea",
+    "India",
+    "France",
+    "Italy",
+    "Vietnam",
+    "Taiwan",
+  ]
+
+  const transportModes = [
+    { value: "sea", label: "Sea Freight", icon: Ship },
+    { value: "air", label: "Air Freight", icon: Plane },
+    { value: "land", label: "Land Transport", icon: Truck },
+  ]
+
+  const updateFormData = (field: keyof FormData, value: string) => {
+    onFormDataChange({ ...formData, [field]: value })
+  }
+
+  return (
+    <Card className="border-2">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calculator className="h-5 w-5 text-primary" />
+          Tariff Calculator
+        </CardTitle>
+        <CardDescription>Enter your shipment details to calculate import costs</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <HTSCodeInput value={formData.htsCode} onChange={(value) => updateFormData("htsCode", value)} />
+          <div className="space-y-2">
+            <Label htmlFor="shipmentValue">Shipment Value (USD)</Label>
+            <div className="relative">
+              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="shipmentValue"
+                type="number"
+                placeholder="10000"
+                className="pl-10"
+                value={formData.shipmentValue}
+                onChange={(e) => updateFormData("shipmentValue", e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Country of Origin</Label>
+            <Select
+              value={formData.countryOfOrigin}
+              onValueChange={(value) => updateFormData("countryOfOrigin", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select origin country" />
+              </SelectTrigger>
+              <SelectContent>
+                {countries.map((country) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Country of Arrival</Label>
+            <Select
+              value={formData.countryOfArrival}
+              onValueChange={(value) => updateFormData("countryOfArrival", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="United States" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="United States">United States</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Mode of Transport</Label>
+          <Select value={formData.modeOfTransport} onValueChange={(value) => updateFormData("modeOfTransport", value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select transport mode" />
+            </SelectTrigger>
+            <SelectContent>
+              {transportModes.map((mode) => {
+                const Icon = mode.icon
+                return (
+                  <SelectItem key={mode.value} value={mode.value}>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {mode.label}
+                    </div>
+                  </SelectItem>
+                )
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="entryDate">Entry Date</Label>
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="entryDate"
+                type="date"
+                className="pl-10"
+                value={formData.entryDate}
+                onChange={(e) => updateFormData("entryDate", e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="loadingDate">Date of Loading</Label>
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="loadingDate"
+                type="date"
+                className="pl-10"
+                value={formData.loadingDate}
+                onChange={(e) => updateFormData("loadingDate", e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <Button
+          onClick={onCalculate}
+          className="w-full"
+          size="lg"
+          disabled={!formData.htsCode || !formData.shipmentValue || !formData.countryOfOrigin}
+        >
+          Calculate Tariff Costs
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
