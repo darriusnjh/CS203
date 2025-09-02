@@ -1,0 +1,8 @@
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/dto/TariffCalculationResponse.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/service/TariffService.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/dto/TariffCalculationRequest.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/controller/TariffController.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/repository/TariffRepository.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/dto/CountrySpecificRate.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/TariffCalculatorApplication.java
+/mnt/c/Users/darri/SMU/CSD/Vibes/tariff-calculator-app/tariff-app/backend/src/main/java/com/tariff/app/entity/Tariff.java
