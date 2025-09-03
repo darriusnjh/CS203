@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 public class TariffService {
@@ -18,7 +19,7 @@ public class TariffService {
     public TariffCalculationResponse calculateTariff(TariffCalculationRequest request) {
         Optional<Tariff> tariffOptional = tariffRepository.findByHts8(request.getHts8());
         String countryCode = request.getOriginCountry();
-
+        ArrayList<String> dutyTypes = new ArrayList<>();
 
         if (tariffOptional.isPresent()) {
             Tariff tariff = tariffOptional.get();
@@ -53,6 +54,7 @@ public class TariffService {
             Double tariffAmount = request.getItemValue() * (AdValRate);
             Double specificRateAmount = request.getItemValue() * (SpecificRate);
             Double otherRateAmount = request.getItemValue() * (OtherRate);
+            Double totalTariffPercentage = AdValRate + SpecificRate + OtherRate;
             Double totalCost = request.getItemValue() + tariffAmount + specificRateAmount + otherRateAmount;
             
             return new TariffCalculationResponse(
@@ -66,7 +68,9 @@ public class TariffService {
                 OtherRate,
                 tariffAmount,
                 totalCost,
-                true
+                true,
+                totalTariffPercentage,
+                dutyTypes
             );
         } else {
             // No tariff found, return response with zero tariff
@@ -81,7 +85,9 @@ public class TariffService {
                 0.0,
                 0.0,
                 request.getItemValue(),
-                false
+                false,
+                0.0,
+                dutyTypes
             );
         }
     }
