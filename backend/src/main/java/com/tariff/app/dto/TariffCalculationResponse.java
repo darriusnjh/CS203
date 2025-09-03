@@ -1,4 +1,5 @@
 package com.tariff.app.dto;
+import java.util.ArrayList;
 
 public class TariffCalculationResponse {
     private Long hts8;
@@ -12,13 +13,15 @@ public class TariffCalculationResponse {
     private boolean tariffFound;
     private Double itemQuantity;
     private String originCountry;
+    private Double totalTariffPercentage;
+    private ArrayList<String> dutyTypes;
     
     // Default constructor
     public TariffCalculationResponse() {}
     
     // Constructor with parameters
     public TariffCalculationResponse(Long hts8, String briefDescription, Double itemValue, 
-                                   Double itemQuantity, String originCountry, Double mfnAdValRate, Double mfnSpecificRate, Double mfnOtherRate, Double tariffAmount, Double totalCost, boolean tariffFound) {
+                                   Double itemQuantity, String originCountry, Double mfnAdValRate, Double mfnSpecificRate, Double mfnOtherRate, Double tariffAmount, Double totalCost, boolean tariffFound, Double totalTariffPercentage, ArrayList<String> dutyTypes) {
         this.hts8 = hts8;
         this.briefDescription = briefDescription;
         this.itemValue = itemValue;
@@ -30,6 +33,8 @@ public class TariffCalculationResponse {
         this.tariffAmount = tariffAmount;
         this.totalCost = totalCost;
         this.tariffFound = tariffFound;
+        this.totalTariffPercentage = totalTariffPercentage;
+        this.dutyTypes = dutyTypes;
     }
     
     // Getters and setters
@@ -119,6 +124,22 @@ public class TariffCalculationResponse {
 
     public void setMfnOtherRate(Double mfnOtherRate) {
         this.mfnOtherRate = mfnOtherRate;
+    }
+
+    public Double getTotalTariffPercentage() {
+        return totalTariffPercentage;
+    }
+
+    public void setTotalTariffPercentage(Double totalTariffPercentage) {
+        this.totalTariffPercentage = totalTariffPercentage;
+    }
+
+    public ArrayList<String> getDutyTypes() {
+        return dutyTypes;
+    }
+
+    public void setDutyTypes(ArrayList<String> dutyTypes) {
+        this.dutyTypes = dutyTypes;
     }
 }
 
