@@ -7,6 +7,15 @@
 # BlueJ files
 *.ctxt
 
+# Next build files
+.next/
+next-env.d.ts 
+.pack
+.old
+
+# node_modules
+node_modules
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
