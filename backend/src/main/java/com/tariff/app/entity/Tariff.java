@@ -11,10 +11,13 @@ public class Tariff {
     private Long id;
 
     @Column(name = "hts8")
-    private Long hts8;
+    private String hts8;
 
     @Column(name = "brief_description")
     private String briefDescription;
+
+    @Column(name = "mfn_text_rate")
+    private String mfnTextRate;
 
     @Column(name = "mfn_ad_val_rate")
     private Double mfnAdValRate;
@@ -69,7 +72,7 @@ public class Tariff {
     }
 
     // Constructor with parameters
-    public Tariff(Long id, Long hts8, String briefDescription, Double mfnAdValRate) {
+    public Tariff(Long id, String hts8, String briefDescription, Double mfnAdValRate) {
         this.id = id;
         this.hts8 = hts8;
         this.briefDescription = briefDescription;
@@ -85,11 +88,11 @@ public class Tariff {
     // this.id = id;
     // }
 
-    public Long getHts8() {
+    public String getHts8() {
         return hts8;
     }
 
-    public void setHts8(Long hts8) {
+    public void setHts8(String hts8) {
         this.hts8 = hts8;
     }
 
@@ -99,6 +102,21 @@ public class Tariff {
 
     public void setBriefDescription(String briefDescription) {
         this.briefDescription = briefDescription;
+    }
+
+    public String getMfnTextRate() {
+        String[] textRate = mfnTextRate.split(" ");
+        String textRateString = "";
+        if (textRate.length > 1) {
+            textRateString = textRate[1];
+        } else {
+            textRateString = "";
+        }
+        return textRateString;
+    }
+
+    public void setMfnTextRate(String mfnTextRate) {
+        this.mfnTextRate = mfnTextRate;
     }
 
     public Double getMfnAdValRate() {

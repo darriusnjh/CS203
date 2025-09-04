@@ -1,29 +1,37 @@
 package com.tariff.app.dto;
 
 public class TariffCalculationRequest {
-    private Long hts8;
+    private String hts8;
     private Double itemValue;
     private Double itemQuantity;
     private String originCountry;
+    private String countryOfArrival;
+    private String modeOfTransport;
+    private String entryDate;
+    private String loadingDate;
     
     // Default constructor
     public TariffCalculationRequest() {}
     
     // Constructor with parameters
-    public TariffCalculationRequest(Long hts8, Double itemValue, Double itemQuantity, String originCountry) {
+    public TariffCalculationRequest(String hts8, Double itemValue, Double itemQuantity, String originCountry) {
         this.hts8 = hts8;
         this.itemValue = itemValue;
         this.itemQuantity = itemQuantity;
         this.originCountry = originCountry;
+        this.countryOfArrival = countryOfArrival;
+        this.modeOfTransport = modeOfTransport;
+        this.entryDate = entryDate;
+        this.loadingDate = loadingDate;
     }
 
     
     // Getters and setters
-    public Long getHts8() {
+    public String getHts8() {
         return hts8;
     }
     
-    public void setHts8(Long hts8) {
+    public void setHts8(String hts8) {
         this.hts8 = hts8;
     }
     
@@ -49,6 +57,38 @@ public class TariffCalculationRequest {
 
     public void setItemQuantity(Double itemQuantity) {
         this.itemQuantity = itemQuantity;
+    }
+
+    public String getCountryOfArrival() {
+        return countryOfArrival;
+    }
+
+    public void setCountryOfArrival(String countryOfArrival) {
+        this.countryOfArrival = countryOfArrival;
+    }
+
+    public String getModeOfTransport() {
+        return modeOfTransport;
+    }
+
+    public void setModeOfTransport(String modeOfTransport) {
+        this.modeOfTransport = modeOfTransport;
+    }
+
+    public String getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public String getLoadingDate() {
+        return loadingDate;
+    }
+
+    public void setLoadingDate(String loadingDate) {
+        this.loadingDate = loadingDate;
     }
 }
 

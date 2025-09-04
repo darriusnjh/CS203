@@ -2,6 +2,7 @@ package com.tariff.app.service;
 
 import com.tariff.app.dto.TariffCalculationRequest;
 import com.tariff.app.dto.TariffCalculationResponse;
+import com.tariff.app.dto.TariffInfo;
 import com.tariff.app.entity.Tariff;
 import com.tariff.app.repository.TariffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TariffService {
@@ -60,6 +63,7 @@ public class TariffService {
             return new TariffCalculationResponse(
                 request.getHts8(),
                 tariff.getBriefDescription(),
+                tariff.getMfnTextRate(),
                 request.getItemValue(),
                 request.getItemQuantity(),
                 request.getOriginCountry(),
@@ -77,6 +81,7 @@ public class TariffService {
             return new TariffCalculationResponse(
                 request.getHts8(),
                 "Product not found",
+                "",
                 request.getItemValue(),
                 request.getItemQuantity(),
                 request.getOriginCountry(),
@@ -90,6 +95,30 @@ public class TariffService {
                 dutyTypes
             );
         }
+    }
+
+    public TariffInfo getTariffInfo(TariffCalculationRequest request) {
+        Optional<Tariff> tariffOptional = tariffRepository.findByHts8(request.getHts8());
+        if (tariffOptional.isPresent()) {
+            Tariff tariff = tariffOptional.get();
+            return new TariffInfo(tariff.getHts8(), tariff.getBriefDescription(), tariff.getMfnTextRate(), tariff.getMfnAdValRate(), tariff.getMfnSpecificRate(), tariff.getMfnOtherRate());
+        } else {
+            return null;
+        }
+    }
+    
+    public List<TariffInfo> searchTariffs(String searchTerm) {
+        List<Tariff> tariffs = tariffRepository.findByHts8OrDescriptionContaining(searchTerm);
+        return tariffs.stream()
+                .map(tariff -> new TariffInfo(
+                    tariff.getHts8(), 
+                    tariff.getBriefDescription(), 
+                    tariff.getMfnTextRate(), 
+                    tariff.getMfnAdValRate(), 
+                    tariff.getMfnSpecificRate(), 
+                    tariff.getMfnOtherRate()
+                ))
+                .collect(Collectors.toList());
     }
 }
 

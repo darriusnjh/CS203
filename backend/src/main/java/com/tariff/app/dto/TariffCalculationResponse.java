@@ -2,8 +2,9 @@ package com.tariff.app.dto;
 import java.util.ArrayList;
 
 public class TariffCalculationResponse {
-    private Long hts8;
+    private String hts8;
     private String briefDescription;
+    private String mfnTextRate;
     private Double itemValue;
     private Double mfnAdValRate;
     private Double mfnSpecificRate;
@@ -20,10 +21,11 @@ public class TariffCalculationResponse {
     public TariffCalculationResponse() {}
     
     // Constructor with parameters
-    public TariffCalculationResponse(Long hts8, String briefDescription, Double itemValue, 
+    public TariffCalculationResponse(String hts8, String briefDescription, String mfnTextRate, Double itemValue, 
                                    Double itemQuantity, String originCountry, Double mfnAdValRate, Double mfnSpecificRate, Double mfnOtherRate, Double tariffAmount, Double totalCost, boolean tariffFound, Double totalTariffPercentage, ArrayList<String> dutyTypes) {
         this.hts8 = hts8;
         this.briefDescription = briefDescription;
+        this.mfnTextRate = mfnTextRate;
         this.itemValue = itemValue;
         this.itemQuantity = itemQuantity;
         this.originCountry = originCountry;
@@ -38,11 +40,11 @@ public class TariffCalculationResponse {
     }
     
     // Getters and setters
-    public Long getHts8() {
+    public String getHts8() {
         return hts8;
     }
     
-    public void setHts8(Long hts8) {
+    public void setHts8(String hts8) {
         this.hts8 = hts8;
     }
     
@@ -52,6 +54,14 @@ public class TariffCalculationResponse {
     
     public void setBriefDescription(String briefDescription) {
         this.briefDescription = briefDescription;
+    }
+    
+    public String getMfnTextRate() {
+        return mfnTextRate;
+    }
+    
+    public void setMfnTextRate(String mfnTextRate) {
+        this.mfnTextRate = mfnTextRate;
     }
     
     public Double getItemValue() {
