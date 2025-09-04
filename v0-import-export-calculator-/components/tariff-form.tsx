@@ -9,9 +9,9 @@ import { Calculator, Ship, Plane, Truck, Calendar, DollarSign } from "lucide-rea
 import { HTSCodeInput } from "@/components/hts-code-input"
 
 interface FormData {
-  htsCode: string
-  shipmentValue: string
-  countryOfOrigin: string
+  hts8: string
+  itemValue: string
+  originCountry: string
   countryOfArrival: string
   modeOfTransport: string
   entryDate: string
@@ -21,12 +21,12 @@ interface FormData {
 interface TariffFormProps {
   formData: FormData
   onFormDataChange: (data: FormData) => void
-  onCalculate: () => void
+  onCalculate: (data: FormData) => void
 }
 
 export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFormProps) {
   const countries = [
-    "China",
+    "CN",
     "Mexico",
     "Canada",
     "Germany",
@@ -61,18 +61,18 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <HTSCodeInput value={formData.htsCode} onChange={(value) => updateFormData("htsCode", value)} />
+          <HTSCodeInput value={formData.hts8} onChange={(value) => updateFormData("hts8", value)} />
           <div className="space-y-2">
-            <Label htmlFor="shipmentValue">Shipment Value (USD)</Label>
+            <Label htmlFor="itemValue">Shipment Value (USD)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                id="shipmentValue"
+                id="itemValue"
                 type="number"
                 placeholder="10000"
                 className="pl-10"
-                value={formData.shipmentValue}
-                onChange={(e) => updateFormData("shipmentValue", e.target.value)}
+                value={formData.itemValue}
+                onChange={(e) => updateFormData("itemValue", e.target.value)}
               />
             </div>
           </div>
@@ -82,8 +82,8 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           <div className="space-y-2">
             <Label>Country of Origin</Label>
             <Select
-              value={formData.countryOfOrigin}
-              onValueChange={(value) => updateFormData("countryOfOrigin", value)}
+              value={formData.originCountry}
+              onValueChange={(value) => updateFormData("originCountry", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select origin country" />
@@ -165,14 +165,14 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
         </div>
 
         <Button
-          onClick={onCalculate}
+          onClick={() => onCalculate(formData)}
           className="w-full"
           size="lg"
-          disabled={!formData.htsCode || !formData.shipmentValue || !formData.countryOfOrigin}
+          disabled={!formData.hts8 || !formData.itemValue || !formData.originCountry}
         >
           Calculate Tariff Costs
         </Button>
       </CardContent>
-    </Card>
+    </Card >
   )
 }

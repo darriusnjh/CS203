@@ -8,6 +8,8 @@ import { WorldMap } from "@/components/world-map"
 import { CountryComparison } from "@/components/country-comparison"
 import { TariffForm } from "@/components/tariff-form"
 import { TariffResult } from "@/components/tariff-result"
+// import fetch from "node-fetch"
+import { error } from "console"
 
 interface TariffCalculation {
   baseTariff: number
@@ -30,7 +32,7 @@ export default function TariffCalculator() {
     htsCode: "",
     shipmentValue: "",
     countryOfOrigin: "",
-    countryOfArrival: "United States",
+    countryOfArrival: "US",
     modeOfTransport: "",
     entryDate: "",
     loadingDate: "",
@@ -39,6 +41,24 @@ export default function TariffCalculator() {
   const [calculation, setCalculation] = useState<TariffCalculation | null>(null)
 
   const calculateTariff = () => {
+
+    fetch("http://localhost:8080/api/tariff/calculate",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    }).then(response => {
+      if (!response.ok) {
+        console.log('HTTP Error! Status:${response.status}')
+      }
+      return response.json()
+    }).then(data => {
+      console.log(data)
+    }).catch(error => {
+      console.log('Fetch error: ', error)
+    })
+
     // Mock calculation - in real app, this would call an API
     const baseRate = Math.random() * 0.15 + 0.05 // 5-20% tariff rate
     const shipmentVal = Number.parseFloat(formData.shipmentValue) || 0
