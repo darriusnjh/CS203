@@ -7,6 +7,13 @@
 # BlueJ files
 *.ctxt
 
+# Properties files
+.properties
+
+# Maven build files
+.mvn/
+.lst
+
 # Next build files
 .next/
 next-env.d.ts 
