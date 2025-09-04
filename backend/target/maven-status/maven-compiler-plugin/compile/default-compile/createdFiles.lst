@@ -1,7 +1,7 @@
-com/tariff/app/dto/TariffCalculationResponse.class
-com/tariff/app/controller/TariffController.class
-com/tariff/app/repository/TariffRepository.class
-com/tariff/app/entity/Tariff.class
-com/tariff/app/TariffCalculatorApplication.class
-com/tariff/app/dto/TariffCalculationRequest.class
-com/tariff/app/service/TariffService.class
+com\tariff\app\dto\TariffCalculationResponse.class
+com\tariff\app\controller\TariffController.class
+com\tariff\app\repository\TariffRepository.class
+com\tariff\app\service\TariffService.class
+com\tariff\app\dto\TariffCalculationRequest.class
+com\tariff\app\TariffCalculatorApplication.class
+com\tariff\app\entity\Tariff.class
