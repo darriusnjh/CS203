@@ -8,17 +8,17 @@
 *.ctxt
 
 # Properties files
-.properties
+*.properties
 
 # Maven build files
 .mvn/
-.lst
+*.lst
 
 # Next build files
 .next/
 next-env.d.ts 
-.pack
-.old
+*.pack
+*.old
 
 # node_modules
 node_modules
