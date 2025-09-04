@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,10 +9,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calculator, Ship, Plane, Truck, Calendar, DollarSign } from "lucide-react"
 import { HTSCodeInput } from "@/components/hts-code-input"
 
-interface FormData {
+interface TariffInfo {
   hts8: string
-  itemValue: string
-  originCountry: string
+  briefDescription: string
+  mfnTextRate: string
+  mfnAdValRate: number
+  mfnSpecificRate: number
+  mfnOtherRate: number
+}
+
+interface FormData {
+  htsCode: string
+  shipmentValue: string
+  shipmentQuantity: string
+  countryOfOrigin: string
   countryOfArrival: string
   modeOfTransport: string
   entryDate: string
@@ -25,19 +36,21 @@ interface TariffFormProps {
 }
 
 export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFormProps) {
+  const [selectedTariff, setSelectedTariff] = useState<TariffInfo | null>(null)
+  
   const countries = [
-    "CN",
-    "Mexico",
-    "Canada",
-    "Germany",
-    "Japan",
-    "United Kingdom",
-    "South Korea",
-    "India",
-    "France",
-    "Italy",
-    "Vietnam",
-    "Taiwan",
+    { name: "China", code: "CN" },
+    { name: "Mexico", code: "MX" },
+    { name: "Canada", code: "CA" },
+    { name: "Germany", code: "DE" },
+    { name: "Japan", code: "JP" },
+    { name: "United Kingdom", code: "GB" },
+    { name: "South Korea", code: "KR" },
+    { name: "India", code: "IN" },
+    { name: "France", code: "FR" },
+    { name: "Italy", code: "IT" },
+    { name: "Vietnam", code: "VN" },
+    { name: "Taiwan", code: "TW" },
   ]
 
   const transportModes = [
@@ -61,18 +74,22 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <HTSCodeInput value={formData.hts8} onChange={(value) => updateFormData("hts8", value)} />
+          <HTSCodeInput 
+            value={formData.htsCode} 
+            onChange={(value) => updateFormData("htsCode", value)}
+            onTariffSelect={setSelectedTariff}
+          />
           <div className="space-y-2">
-            <Label htmlFor="itemValue">Shipment Value (USD)</Label>
+            <Label htmlFor="shipmentValue">Shipment Value (USD)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                id="itemValue"
+                id="shipmentValue"
                 type="number"
                 placeholder="10000"
                 className="pl-10"
-                value={formData.itemValue}
-                onChange={(e) => updateFormData("itemValue", e.target.value)}
+                value={formData.shipmentValue}
+                onChange={(e) => updateFormData("shipmentValue", e.target.value)}
               />
             </div>
           </div>
@@ -80,18 +97,38 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
+            <Label htmlFor="shipmentQuantity">
+              Shipment Quantity
+              {selectedTariff?.mfnTextRate && (
+                <span className="text-sm text-muted-foreground ml-2">
+                  ({selectedTariff.mfnTextRate})
+                </span>
+              )}
+            </Label>
+            <Input
+              id="shipmentQuantity"
+              type="number"
+              placeholder="1"
+              value={formData.shipmentQuantity}
+              onChange={(e) => updateFormData("shipmentQuantity", e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
             <Label>Country of Origin</Label>
             <Select
-              value={formData.originCountry}
-              onValueChange={(value) => updateFormData("originCountry", value)}
+              value={formData.countryOfOrigin}
+              onValueChange={(value) => updateFormData("countryOfOrigin", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select origin country" />
               </SelectTrigger>
               <SelectContent>
                 {countries.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
+                  <SelectItem key={country.code} value={country.code}>
+                    {country.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -168,7 +205,7 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           onClick={() => onCalculate(formData)}
           className="w-full"
           size="lg"
-          disabled={!formData.hts8 || !formData.itemValue || !formData.originCountry}
+          disabled={!formData.htsCode || !formData.shipmentValue || !formData.countryOfOrigin}
         >
           Calculate Tariff Costs
         </Button>

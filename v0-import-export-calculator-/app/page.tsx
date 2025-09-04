@@ -12,14 +12,25 @@ import { TariffResult } from "@/components/tariff-result"
 import { error } from "console"
 
 interface TariffCalculation {
-  baseTariff: number
-  additionalFees: number
-  total: number
+  hts8: string;
+  briefDescription: string;
+  itemValue: number;
+  mfnAdValRate: number;
+  mfnSpecificRate: number;
+  mfnOtherRate: number;
+  tariffAmount: number;
+  totalCost: number;
+  tariffFound: boolean;
+  itemQuantity: number;
+  originCountry: string;
+  totalTariffPercentage: number;
+  dutyTypes: string[];
 }
 
 interface FormData {
   htsCode: string
   shipmentValue: string
+  shipmentQuantity: string
   countryOfOrigin: string
   countryOfArrival: string
   modeOfTransport: string
@@ -31,6 +42,7 @@ export default function TariffCalculator() {
   const [formData, setFormData] = useState<FormData>({
     htsCode: "",
     shipmentValue: "",
+    shipmentQuantity: "",
     countryOfOrigin: "",
     countryOfArrival: "US",
     modeOfTransport: "",
@@ -40,36 +52,64 @@ export default function TariffCalculator() {
 
   const [calculation, setCalculation] = useState<TariffCalculation | null>(null)
 
-  const calculateTariff = () => {
+  const calculateTariff = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/tariff/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
 
-    fetch("http://localhost:8080/api/tariff/calculate",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    }).then(response => {
       if (!response.ok) {
-        console.log('HTTP Error! Status:${response.status}')
+        console.log(`HTTP Error! Status: ${response.status}`)
+        throw new Error(`HTTP Error! Status: ${response.status}`)
       }
-      return response.json()
-    }).then(data => {
-      console.log(data)
-    }).catch(error => {
+
+      const data = await response.json()
+      console.log('API Response:', data)
+
+      // Use the actual API response data
+      setCalculation({
+        hts8: data.hts8 || 0,
+        briefDescription: data.briefDescription || "",
+        itemValue: data.itemValue || 0,
+        mfnAdValRate: data.mfnAdValRate || 0,
+        mfnSpecificRate: data.mfnSpecificRate || 0,
+        mfnOtherRate: data.mfnOtherRate || 0,
+        tariffAmount: data.tariffAmount || 0,
+        totalCost: data.totalCost || 0,
+        tariffFound: data.tariffFound || false,
+        itemQuantity: data.itemQuantity || 0,
+        originCountry: data.originCountry || "",
+        totalTariffPercentage: data.totalTariffPercentage || 0,
+        dutyTypes: data.dutyTypes || [],
+      })
+    } catch (error) {
       console.log('Fetch error: ', error)
-    })
+      // Fallback to mock calculation if API fails
+      // const baseRate = Math.random() * 0.15 + 0.05 // 5-20% tariff rate
+      // const shipmentVal = Number.parseFloat(formData.shipmentValue) || 0
+      // const baseTariff = shipmentVal * baseRate
+      // const additionalFees = shipmentVal * 0.02 // 2% additional fees
 
-    // Mock calculation - in real app, this would call an API
-    const baseRate = Math.random() * 0.15 + 0.05 // 5-20% tariff rate
-    const shipmentVal = Number.parseFloat(formData.shipmentValue) || 0
-    const baseTariff = shipmentVal * baseRate
-    const additionalFees = shipmentVal * 0.02 // 2% additional fees
-
-    setCalculation({
-      baseTariff,
-      additionalFees,
-      total: baseTariff + additionalFees,
-    })
+      setCalculation({
+        hts8: "-",
+        briefDescription: "",
+        itemValue: 0,
+        mfnAdValRate: 0,
+        mfnSpecificRate: 0,
+        mfnOtherRate: 0,
+        tariffAmount: 0,
+        totalCost: 0,
+        tariffFound: false,
+        itemQuantity: 0,
+        originCountry: "",
+        totalTariffPercentage: 0,
+        dutyTypes: [],
+      })
+    }
   }
 
   return (
