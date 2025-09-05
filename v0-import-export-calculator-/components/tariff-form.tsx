@@ -19,11 +19,11 @@ interface TariffInfo {
 }
 
 interface FormData {
-  htsCode: string
-  shipmentValue: string
-  shipmentQuantity: string
-  countryOfOrigin: string
-  countryOfArrival: string
+  hts8: string
+  itemValue: string
+  itemQuantity: string
+  originCountry: string
+  arrivalCountry: string
   modeOfTransport: string
   entryDate: string
   loadingDate: string
@@ -75,21 +75,21 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <HTSCodeInput 
-            value={formData.htsCode} 
-            onChange={(value) => updateFormData("htsCode", value)}
+            value={formData.hts8} 
+            onChange={(value) => updateFormData("hts8", value)}
             onTariffSelect={setSelectedTariff}
           />
           <div className="space-y-2">
-            <Label htmlFor="shipmentValue">Shipment Value (USD)</Label>
+            <Label htmlFor="itemValue">Shipment Value (USD)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                id="shipmentValue"
+                id="itemValue"
                 type="number"
                 placeholder="10000"
                 className="pl-10"
-                value={formData.shipmentValue}
-                onChange={(e) => updateFormData("shipmentValue", e.target.value)}
+                value={formData.itemValue}
+                onChange={(e) => updateFormData("itemValue", e.target.value)}
               />
             </div>
           </div>
@@ -97,7 +97,7 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="shipmentQuantity">
+            <Label htmlFor="itemQuantity">
               Shipment Quantity
               {selectedTariff?.mfnTextRate && (
                 <span className="text-sm text-muted-foreground ml-2">
@@ -106,11 +106,11 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
               )}
             </Label>
             <Input
-              id="shipmentQuantity"
+              id="itemQuantity"
               type="number"
               placeholder="1"
-              value={formData.shipmentQuantity}
-              onChange={(e) => updateFormData("shipmentQuantity", e.target.value)}
+              value={formData.itemQuantity}
+              onChange={(e) => updateFormData("itemQuantity", e.target.value)}
             />
           </div>
         </div>
@@ -119,8 +119,8 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           <div className="space-y-2">
             <Label>Country of Origin</Label>
             <Select
-              value={formData.countryOfOrigin}
-              onValueChange={(value) => updateFormData("countryOfOrigin", value)}
+              value={formData.originCountry}
+              onValueChange={(value) => updateFormData("originCountry", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select origin country" />
@@ -137,8 +137,8 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           <div className="space-y-2">
             <Label>Country of Arrival</Label>
             <Select
-              value={formData.countryOfArrival}
-              onValueChange={(value) => updateFormData("countryOfArrival", value)}
+              value={formData.arrivalCountry}
+              onValueChange={(value) => updateFormData("arrivalCountry", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="United States" />
@@ -205,7 +205,7 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           onClick={() => onCalculate(formData)}
           className="w-full"
           size="lg"
-          disabled={!formData.htsCode || !formData.shipmentValue || !formData.countryOfOrigin}
+          disabled={!formData.hts8 || !formData.itemValue || !formData.originCountry}
         >
           Calculate Tariff Costs
         </Button>
