@@ -1,7 +1,8 @@
 package com.tariff.app.dto;
 
 public class UserLoginResponse {
-    private String username; 
+    private String message; 
+    private UserDto user;
 
     // Default constructor 
     public UserLoginResponse(){
@@ -9,16 +10,25 @@ public class UserLoginResponse {
     }
 
     // Constructor with Parameters
-    public UserLoginResponse(String username){
-        this.username = username;
+    public UserLoginResponse(String message, UserDto user){
+        this.message = message;
+        this.user = user;
     }
 
-    public String getUsername(){
-        return username;
+    public String getMessage(){
+        return message;
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public void setMessage(String message){
+        this.message = message;
+    }
+
+    public UserDto getUser(){
+        return user;
+    }
+
+    public void setUser(UserDto user){
+        this.user = user;
     }
     
 }
