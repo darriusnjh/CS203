@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
+import com.tariff.app.dto.UserSignupRequest;
+import com.tariff.app.dto.UserSignupResponse;
 import com.tariff.app.service.UserService;
 
 @RestController
@@ -22,9 +24,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // @PostMapping("/signup")
-    // public ResponseEntity<UserSignupResponse> signup(@RequestBody){
-
-    // }
+    @PostMapping("/signup")
+    public ResponseEntity<UserSignupResponse> signup(@RequestBody UserSignupRequest request){
+        UserSignupResponse response = userService.signupUser(request);
+        return ResponseEntity.ok(response);
+        
+    }
     
 }
