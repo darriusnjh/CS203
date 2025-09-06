@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { LoginDialog } from "@/components/login-dialog"
+import { UserMenu } from "@/components/user-menu"
+import { useAuth } from "@/components/auth-context"
 import { Calculator, Globe, TrendingUp } from "lucide-react"
 import { WorldMap } from "@/components/world-map"
 import { CountryComparison } from "@/components/country-comparison"
@@ -39,6 +42,7 @@ interface FormData {
 }
 
 export default function TariffCalculator() {
+  const { user } = useAuth()
   const [formData, setFormData] = useState<FormData>({
     htsCode: "",
     shipmentValue: "",
@@ -126,7 +130,10 @@ export default function TariffCalculator() {
               <p className="text-sm text-muted-foreground">Import Export Cost Calculator</p>
             </div>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            {user ? <UserMenu /> : <LoginDialog />}
+          </div>
         </div>
       </header>
 
