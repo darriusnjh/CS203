@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/TariffCalculatorApplication.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/service/TariffService.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/dto/TariffInfo.java
@@ -6,3 +7,19 @@
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/dto/TariffCalculationResponse.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/repository/TariffRepository.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/controller/TariffController.java
+=======
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\dto\TariffCalculationRequest.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\controller\TariffController.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\dto\TariffInfo.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\dto\UserLoginRequest.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\controller\UserController.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\repository\TariffRepository.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\dto\UserLoginResponse.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\entity\User.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\service\UserService.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\repository\UserRepository.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\entity\Tariff.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\TariffCalculatorApplication.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\dto\TariffCalculationResponse.java
+C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\service\TariffService.java
+>>>>>>> 989df7e (Added UserLogin Req/Res, User Controller function)
