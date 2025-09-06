@@ -53,8 +53,8 @@ public class User {
         this.password = hashedPassword;
     }
 
-    public boolean verifyPassword(String rawPassword, String hashedPassword){
-        return encoder.matches(rawPassword, hashedPassword);
+    public boolean verifyPassword(String rawPassword){
+        return encoder.matches(rawPassword, password);
     }
 
 }
