@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/TariffCalculatorApplication.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/service/TariffService.java
 /Users/ansonkoh/Downloads/CS203/backend/src/main/java/com/tariff/app/dto/TariffInfo.java
@@ -44,3 +45,23 @@ C:\Users\Joe\Downloads\CS203\backend\src\main\java\com\tariff\app\service\Tariff
 /mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/controller/UserController.java
 /mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserDto.java
 >>>>>>> 7f16a80 (Implement user DTO, mapper, and update user entity with timestamp fields. Enhance user login and signup responses to include user details. Add MapStruct dependencies for mapping.)
+=======
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/entity/User.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/TariffCalculatorApplication.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/TariffCalculationResponse.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/repository/TariffRepository.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/repository/UserRepository.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserLoginRequest.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/TariffCalculationRequest.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserLoginResponse.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/entity/Tariff.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/mappers/UserMapper.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserSignupRequest.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserSignupResponse.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/controller/TariffController.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/service/UserService.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/TariffInfo.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/service/TariffService.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/controller/UserController.java
+/mnt/c/Users/darri/SMU/CSD/app/backend/src/main/java/com/tariff/app/dto/UserDto.java
+>>>>>>> a65c02f (Fix user authentication: add Lombok dependencies, fix JPA imports, update User entity with proper setters, fix UserRepository query)
