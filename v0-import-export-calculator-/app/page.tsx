@@ -2,10 +2,7 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { LoginDialog } from "@/components/login-dialog"
-import { UserMenu } from "@/components/user-menu"
-import { useAuth } from "@/components/auth-context"
+import { NavigationHeader } from "@/components/navigation-header"
 import { Calculator, Globe, TrendingUp } from "lucide-react"
 import { WorldMap } from "@/components/world-map"
 import { CountryComparison } from "@/components/country-comparison"
@@ -42,7 +39,6 @@ interface FormData {
 }
 
 export default function TariffCalculator() {
-  const { user } = useAuth()
   const [formData, setFormData] = useState<FormData>({
     htsCode: "",
     shipmentValue: "",
@@ -118,24 +114,7 @@ export default function TariffCalculator() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Calculator className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">TariffCalc Pro</h1>
-              <p className="text-sm text-muted-foreground">Import Export Cost Calculator</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            {user ? <UserMenu /> : <LoginDialog />}
-          </div>
-        </div>
-      </header>
+      <NavigationHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
