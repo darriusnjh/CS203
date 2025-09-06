@@ -1,12 +1,13 @@
 "use client"
 
 import { useAuth } from '@/components/auth-context'
+import { NavigationHeader } from '@/components/navigation-header'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { User, Mail, Calendar, Shield, LogOut, ArrowLeft } from 'lucide-react'
+import { User, Mail, Calendar, Shield, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -29,30 +30,9 @@ export default function AccountPage() {
     router.push('/')
   }
 
-  const handleBackToHome = () => {
-    router.push('/')
-  }
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Button variant="ghost" onClick={handleBackToHome} className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Calculator
-          </Button>
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="/placeholder-user.jpg" alt={user.name} />
-              <AvatarFallback>
-                {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm font-medium">{user.name}</span>
-          </div>
-        </div>
-      </header>
+      <NavigationHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
