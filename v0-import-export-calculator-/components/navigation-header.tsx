@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginDialog } from "@/components/login-dialog"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/components/auth-context"
-import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare } from "lucide-react"
+import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function NavigationHeader() {
@@ -84,7 +84,18 @@ export function NavigationHeader() {
           {/* Right side controls */}
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            {user ? <UserMenu /> : <LoginDialog />}
+            {user ? (
+              <UserMenu />
+            ) : (
+              <div className="flex items-center gap-2">
+                <LoginDialog />
+                <Button variant="default" size="sm" asChild>
+                  <Link href="/signup">
+                    Sign Up
+                  </Link>
+                </Button>
+              </div>
+            )}
             
             {/* Mobile menu button */}
             <Button
@@ -128,6 +139,24 @@ export function NavigationHeader() {
                   </Link>
                 )
               })}
+              
+              {/* Mobile Auth Links */}
+              {!user && (
+                <div className="pt-4 border-t">
+                  <div className="flex flex-col gap-2">
+                    <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+                      <LogIn className="h-4 w-4" />
+                      Login
+                    </Button>
+                    <Button variant="default" size="sm" asChild className="w-full justify-start gap-2">
+                      <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                        <UserPlus className="h-4 w-4" />
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              )}
             </nav>
           </div>
         )}
