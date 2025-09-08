@@ -14,6 +14,14 @@ import com.tariff.app.entity.User;
 import com.tariff.app.repository.UserRepository;
 import com.tariff.app.mappers.UserMapper;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
+import javax.crypto.SecretKey;
+
+import java.util.Base64;
+import java.util.Date;
+
 @Service
 public class UserService {
 
@@ -21,6 +29,16 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
+
+    public String createJwt(String username, String secretKey) {
+        long expirationMillis = 3600000;
+        SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode("put the secret key here")) ;
+
+        return Jwts.builder().subject(username).issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
+    }
 
     public UserLoginResponse loginUser(UserLoginRequest request) {
         Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
@@ -49,7 +67,7 @@ public class UserService {
             User user = new User();
             user.setUsername(request.getUsername());
             user.setHashPassword(request.getPassword());
-            
+
             // Set timestamp fields
             OffsetDateTime now = OffsetDateTime.now();
             user.setCreatedAt(now);

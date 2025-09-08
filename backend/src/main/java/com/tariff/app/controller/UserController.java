@@ -1,8 +1,10 @@
 package com.tariff.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
 
 import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
@@ -21,7 +23,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request ){
         UserLoginResponse response = userService.loginUser(request);
-        return ResponseEntity.ok(response);
+        String jwt = userService.createJwt(request.getUsername(), "testing");
+        
+        ResponseCookie cookie = ResponseCookie.from("jwt",jwt).build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }
 
     @PostMapping("/signup")
