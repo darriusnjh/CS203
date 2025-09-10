@@ -8,6 +8,9 @@ import { WorldMap } from "@/components/world-map"
 import { CountryComparison } from "@/components/country-comparison"
 import { TariffForm } from "@/components/tariff-form"
 import { TariffResult } from "@/components/tariff-result"
+import { Toaster } from "@/components/ui/toaster"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "@/components/ui/use-toast"
 // import fetch from "node-fetch"
 import { error } from "console"
 
@@ -38,6 +41,7 @@ interface FormData {
   loadingDate: string
 }
 
+
 export default function TariffCalculator() {
   const [formData, setFormData] = useState<FormData>({
     htsCode: "",
@@ -48,69 +52,49 @@ export default function TariffCalculator() {
     modeOfTransport: "",
     entryDate: "",
     loadingDate: "",
-  })
+  });
 
-  const [calculation, setCalculation] = useState<TariffCalculation | null>(null)
+  const [calculation, setCalculation] = useState<TariffCalculation | null>(null); // ✅ now correctly placed
 
-  const calculateTariff = async () => {
-    try {
+  const { mutate: calculateTariff, isPending } = useMutation({
+    mutationFn: async () => {
       const response = await fetch("http://localhost:8080/api/tariff/calculate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       if (!response.ok) {
-        console.log(`HTTP Error! Status: ${response.status}`)
-        throw new Error(`HTTP Error! Status: ${response.status}`)
+        throw new Error(`HTTP error: ${response.status}`);
       }
 
-      const data = await response.json()
-      console.log('API Response:', data)
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Use the actual API response data
-      setCalculation({
-        hts8: data.hts8 || 0,
-        briefDescription: data.briefDescription || "",
-        itemValue: data.itemValue || 0,
-        mfnAdValRate: data.mfnAdValRate || 0,
-        mfnSpecificRate: data.mfnSpecificRate || 0,
-        mfnOtherRate: data.mfnOtherRate || 0,
-        tariffAmount: data.tariffAmount || 0,
-        totalCost: data.totalCost || 0,
-        tariffFound: data.tariffFound || false,
-        itemQuantity: data.itemQuantity || 0,
-        originCountry: data.originCountry || "",
-        totalTariffPercentage: data.totalTariffPercentage || 0,
-        dutyTypes: data.dutyTypes || [],
-      })
-    } catch (error) {
-      console.log('Fetch error: ', error)
-      // Fallback to mock calculation if API fails
-      // const baseRate = Math.random() * 0.15 + 0.05 // 5-20% tariff rate
-      // const shipmentVal = Number.parseFloat(formData.shipmentValue) || 0
-      // const baseTariff = shipmentVal * baseRate
-      // const additionalFees = shipmentVal * 0.02 // 2% additional fees
+      return await response.json();
+    },
+    onSuccess: (data: TariffCalculation) => {
+      setCalculation(data);
+    },
+    onError: async() => {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
 
       setCalculation({
         hts8: "-",
-        briefDescription: "",
-        itemValue: 0,
-        mfnAdValRate: 0,
+        briefDescription: "Mock description",
+        itemValue: 1234,
+        mfnAdValRate: 0.1,
         mfnSpecificRate: 0,
         mfnOtherRate: 0,
-        tariffAmount: 0,
-        totalCost: 0,
-        tariffFound: false,
-        itemQuantity: 0,
-        originCountry: "",
-        totalTariffPercentage: 0,
-        dutyTypes: [],
-      })
-    }
-  }
+        tariffAmount: 123,
+        totalCost: 1357,
+        tariffFound: true,
+        itemQuantity: 10,
+        originCountry: formData.countryOfOrigin,
+        totalTariffPercentage: 0.11,
+        dutyTypes: ["Ad Valorem"],
+      });
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -147,7 +131,15 @@ export default function TariffCalculator() {
             <div className="grid lg:grid-cols-2 gap-8">
               <TariffForm formData={formData} onFormDataChange={setFormData} onCalculate={calculateTariff} />
 
-              <TariffResult calculation={calculation} formData={formData} />
+              <div>
+                {isPending && (
+                 <div className="flex justify-center items-center mb-4">
+                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent border-gray-500" />
+                 <span className="ml-2 text-sm text-muted-foreground">Calculating tariffs...</span>
+               </div>
+             )}
+                <TariffResult calculation={calculation} formData={formData} />
+              </div>
             </div>
           </TabsContent>
 

@@ -8,6 +8,8 @@ import { AuthProvider } from "@/components/auth-context"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 import "./globals.css"
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from "@/lib/react-query" //
 
 export const metadata: Metadata = {
   title: "TariffCalc Pro - Import Export Cost Calculator",
@@ -23,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <QueryClientProvider client={queryClient}>
         <Suspense fallback={null}>
           <ThemeProvider
             attribute="class"
@@ -38,6 +41,7 @@ export default function RootLayout({
         </Suspense>
         <Toaster />
         <Analytics />
+        </QueryClientProvider>
       </body>
     </html>
   )
