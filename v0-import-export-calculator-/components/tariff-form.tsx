@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calculator, Ship, Plane, Truck, Calendar, DollarSign } from "lucide-react"
 import { HTSCodeInput } from "@/components/hts-code-input"
+import { useToast } from "@/lib/use-toast"
 
 interface TariffInfo {
   hts8: string
@@ -37,6 +38,7 @@ interface TariffFormProps {
 
 export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFormProps) {
   const [selectedTariff, setSelectedTariff] = useState<TariffInfo | null>(null)
+  const { toast } = useToast()
   
   const countries = [
     { name: "China", code: "CN" },
@@ -59,7 +61,49 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
     { value: "land", label: "Land Transport", icon: Truck },
   ]
 
+  // Get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date()
+    return today.toISOString().split('T')[0]
+  }
+
+  // Validate if a date is not in the past
+  const validateDate = (dateString: string) => {
+    if (!dateString) return true
+    const selectedDate = new Date(dateString)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Reset time to start of day
+    return selectedDate >= today
+  }
+
+  // Validate if a number is not negative
+  const validateNumber = (value: string) => {
+    if (!value) return true
+    const numValue = parseFloat(value)
+    return !isNaN(numValue) && numValue >= 0
+  }
+
   const updateFormData = (field: keyof FormData, value: string) => {
+    // Validate numerical inputs for negative values
+    if ((field === 'itemValue' || field === 'itemQuantity') && value && !validateNumber(value)) {
+      toast({
+        title: "Invalid Input",
+        description: "Please insert valid values for the respective parameters",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Validate dates for past dates
+    if ((field === 'entryDate' || field === 'loadingDate') && value && !validateDate(value)) {
+      toast({
+        title: "Invalid Date",
+        description: "Please select a current or future date",
+        variant: "destructive",
+      })
+      return
+    }
+
     onFormDataChange({ ...formData, [field]: value })
   }
 
@@ -181,6 +225,7 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
                 id="entryDate"
                 type="date"
                 className="pl-10"
+                min={getTodayDate()}
                 value={formData.entryDate}
                 onChange={(e) => updateFormData("entryDate", e.target.value)}
               />
@@ -194,6 +239,7 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
                 id="loadingDate"
                 type="date"
                 className="pl-10"
+                min={getTodayDate()}
                 value={formData.loadingDate}
                 onChange={(e) => updateFormData("loadingDate", e.target.value)}
               />
