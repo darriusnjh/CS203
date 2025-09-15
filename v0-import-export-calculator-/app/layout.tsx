@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/components/auth-context"
 import { Toaster } from "@/components/ui/toaster"
+import { Footer } from "@/components/footer"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -32,7 +33,10 @@ export default function RootLayout({
             storageKey="tariff-calc-theme"
           >
             <AuthProvider>
-              {children}
+              <div className="min-h-screen flex flex-col">
+                {children}
+                <Footer />
+              </div>
             </AuthProvider>
           </ThemeProvider>
         </Suspense>

@@ -31,7 +31,7 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <NavigationHeader />
 
       <main className="container mx-auto px-4 py-8">
