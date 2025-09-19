@@ -30,5 +30,6 @@ public class UserLoginResponse {
     public void setUser(UserDto user){
         this.user = user;
     }
+
     
 }
