@@ -51,8 +51,11 @@ export default function TariffCalculator() {
   })
 
   const [calculation, setCalculation] = useState<TariffCalculation | null>(null)
+  const [loading, setLoading] = useState(false)
+
 
   const calculateTariff = async () => {
+    setLoading(true) // start loading
     try {
       const response = await fetch("http://localhost:8080/api/tariff/calculate", {
         method: "POST",
@@ -61,18 +64,16 @@ export default function TariffCalculator() {
         },
         body: JSON.stringify(formData)
       })
-
+  
       if (!response.ok) {
-        console.log(`HTTP Error! Status: ${response.status}`)
         throw new Error(`HTTP Error! Status: ${response.status}`)
       }
-
+  
       const data = await response.json()
-      console.log('API Response:', data)
-
-      // Use the actual API response data
+      console.log("API Response:", data)
+  
       setCalculation({
-        hts8: data.hts8 || 0,
+        hts8: data.hts8 || "-",
         briefDescription: data.briefDescription || "",
         itemValue: data.itemValue || 0,
         mfnAdValRate: data.mfnAdValRate || 0,
@@ -87,13 +88,7 @@ export default function TariffCalculator() {
         dutyTypes: data.dutyTypes || [],
       })
     } catch (error) {
-      console.log('Fetch error: ', error)
-      // Fallback to mock calculation if API fails
-      // const baseRate = Math.random() * 0.15 + 0.05 // 5-20% tariff rate
-      // const shipmentVal = Number.parseFloat(formData.shipmentValue) || 0
-      // const baseTariff = shipmentVal * baseRate
-      // const additionalFees = shipmentVal * 0.02 // 2% additional fees
-
+      console.error("Fetch error:", error)
       setCalculation({
         hts8: "-",
         briefDescription: "",
@@ -109,8 +104,11 @@ export default function TariffCalculator() {
         totalTariffPercentage: 0,
         dutyTypes: [],
       })
+    } finally {
+      setLoading(false) // stop loading, success or fail
     }
   }
+  
 
   return (
     <div className="bg-background">
@@ -145,7 +143,7 @@ export default function TariffCalculator() {
 
           <TabsContent value="calculator">
             <div className="grid lg:grid-cols-2 gap-8">
-              <TariffForm formData={formData} onFormDataChange={setFormData} onCalculate={calculateTariff} />
+              <TariffForm formData={formData} onFormDataChange={setFormData} onCalculate={calculateTariff} isLoading={loading}/>
 
               <TariffResult calculation={calculation} formData={formData} />
             </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calculator, Ship, Plane, Truck, Calendar, DollarSign } from "lucide-react"
 import { HTSCodeInput } from "@/components/hts-code-input"
 import { useToast } from "@/lib/use-toast"
+import { Progress } from "@/components/ui/progress"
 
 interface TariffInfo {
   hts8: string
@@ -34,12 +35,13 @@ interface TariffFormProps {
   formData: FormData
   onFormDataChange: (data: FormData) => void
   onCalculate: (data: FormData) => void
+  isLoading?: boolean
 }
 
-export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFormProps) {
+export function TariffForm({ formData, onFormDataChange, onCalculate, isLoading}: TariffFormProps) {
   const [selectedTariff, setSelectedTariff] = useState<TariffInfo | null>(null)
   const { toast } = useToast()
-  
+
   const countries = [
     { name: "China", code: "CN" },
     { name: "Mexico", code: "MX" },
@@ -118,8 +120,8 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <HTSCodeInput 
-            value={formData.hts8} 
+          <HTSCodeInput
+            value={formData.hts8}
             onChange={(value) => updateFormData("hts8", value)}
             onTariffSelect={setSelectedTariff}
           />
@@ -251,11 +253,41 @@ export function TariffForm({ formData, onFormDataChange, onCalculate }: TariffFo
           onClick={() => onCalculate(formData)}
           className="w-full"
           size="lg"
-          disabled={!formData.hts8 || !formData.itemValue || !formData.originCountry}
+          disabled={isLoading || !formData.hts8 || !formData.itemValue || !formData.originCountry}
         >
-          Calculate Tariff Costs
+          {isLoading ? "Calculating..." : "Calculate Tariff Costs"}
         </Button>
+
+        {isLoading && (
+          <div className="mt-4">
+            <LoadingBar active={isLoading} />
+          </div>
+        )}
       </CardContent>
-    </Card >
+    </Card>
   )
 }
+
+function LoadingBar({ active }: { active: boolean }) {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (active) {
+      setProgress(0)
+      const timer = setInterval(() => {
+        setProgress((p) => (p < 40 ? p + 5 : p)) // slower creep, max 95%
+      }, 200) // every 200ms
+      return () => clearInterval(timer)
+    } else {
+      setProgress(100) // snap to full when done
+    }
+  }, [active])
+
+  return (
+    <div className="flex flex-col items-center gap-2 mt-4">
+      <Progress value={progress} className="w-full h-3" />   {/* taller bar */}
+      {active && <span className="text-sm text-muted-foreground">Calculating tariff…</span>}
+    </div>
+  )
+}
+
