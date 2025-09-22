@@ -18,7 +18,7 @@ import java.util.UUID;
        indexes = {
            @Index(name = "idx_daily_tasks_date", columnList = "task_date"),
            @Index(name = "idx_daily_tasks_type", columnList = "task_type"),
-           @Index(name = "idx_daily_tasks_active", columnList = "is_active")
+           @Index(name = "idx_daily_tasks_active", columnList = "active")
        })
 public class DailyTask {
     @Id

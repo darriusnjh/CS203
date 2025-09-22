@@ -20,9 +20,6 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @Autowired
-    private JwtService jwtService;
-
     @PostMapping("/score")
     public ResponseEntity<GameScoreResponse> saveGameScore(
             @Valid @RequestBody GameScoreRequest request,
