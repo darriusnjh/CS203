@@ -5,8 +5,6 @@ import com.tariff.app.dto.TariffCalculationResponse;
 import com.tariff.app.dto.TariffInfo;
 import com.tariff.app.entity.Tariff;
 import com.tariff.app.entity.USTariff;
-import com.tariff.app.entity.ChinaTariff;
-import com.tariff.app.entity.SingaporeTariff;
 import com.tariff.app.repository.USTariffRepository;
 import com.tariff.app.repository.ChinaTariffRepository;
 import com.tariff.app.repository.SingaporeTariffRepository;
@@ -74,63 +72,63 @@ public class TariffService {
     private BrazilTariffRepository brazilTariffRepository;
 
     // Method to get the appropriate repository based on countryOfArrival
-    private Optional<? extends Tariff> findTariffByHts8(String hts8, String countryOfArrival) {
+    private Optional<Tariff> findTariffByHts8(String hts8, String countryOfArrival) {
         switch (countryOfArrival.toUpperCase()) {
             case "AU":
             case "AUSTRALIA":
-                return australiaTariffRepository.findByHts8(hts8);
+                return australiaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "BR":
             case "BRAZIL":
-                return brazilTariffRepository.findByHts8(hts8);
+                return brazilTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "CA":
             case "CANADA":
-                return canadaTariffRepository.findByHts8(hts8);
+                return canadaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "CN":
             case "CHINA":
-                return chinaTariffRepository.findByHts8(hts8);
+                return chinaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "FR":
             case "FRANCE":
-                return franceTariffRepository.findByHts8(hts8);
+                return franceTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "IN":
             case "INDIA":
-                return indiaTariffRepository.findByHts8(hts8);
+                return indiaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "ID":
             case "INDONESIA":
-                return indonesiaTariffRepository.findByHts8(hts8);
+                return indonesiaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "IL":
             case "ISRAEL":
-                return israelTariffRepository.findByHts8(hts8);
+                return israelTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "IT":
             case "ITALY":
-                return italyTariffRepository.findByHts8(hts8);
+                return italyTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "JP":
             case "JAPAN":
-                return japanTariffRepository.findByHts8(hts8);
+                return japanTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "MX":
             case "MEXICO":
-                return mexicoTariffRepository.findByHts8(hts8);
+                return mexicoTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "SA":
             case "SAUDI_ARABIA":
-                return saudiArabiaTariffRepository.findByHts8(hts8);
+                return saudiArabiaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "SG":
             case "SINGAPORE":
-                return singaporeTariffRepository.findByHts8(hts8);
+                return singaporeTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "ZA":
             case "SOUTH_AFRICA":
-                return southAfricaTariffRepository.findByHts8(hts8);
+                return southAfricaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "KR":
             case "SOUTH_KOREA":
-                return southKoreaTariffRepository.findByHts8(hts8);
+                return southKoreaTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "TR":
             case "TURKEY":
-                return turkeyTariffRepository.findByHts8(hts8);
+                return turkeyTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "GB":
             case "UK":
-                return ukTariffRepository.findByHts8(hts8);
+                return ukTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
             case "US":
             case "USA":
             default:
-                return usTariffRepository.findByHts8(hts8);
+                return usTariffRepository.findByHts8(hts8).map(t -> (Tariff) t);
         }
     }
 

@@ -25,4 +25,25 @@ public class UserDto {
     private OffsetDateTime updatedAt;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private OffsetDateTime lastLogin;
+    
+    // Manual setters to ensure they exist
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    public void setLastLogin(OffsetDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }
