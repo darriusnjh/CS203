@@ -26,7 +26,7 @@ public class UserDto {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private OffsetDateTime lastLogin;
     
-    // Manual setters to ensure they exist
+    // Manual setters to ensure they exist (Lombok compatibility issue)
     public void setId(UUID id) {
         this.id = id;
     }
