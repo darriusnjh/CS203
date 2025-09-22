@@ -186,4 +186,29 @@ public class GameScore {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @PostLoad
+    protected void onLoad() {
+        // Log entity loading for debugging
+        System.out.println("GameScore loaded: " + this.id + " for user: " + 
+                          (this.user != null ? this.user.getUsername() : "unknown"));
+    }
+
+    @PostPersist
+    protected void onPersist() {
+        // Log new score creation
+        System.out.println("New GameScore created: " + this.id + " with score: " + this.score);
+    }
+
+    @PostUpdate
+    protected void onPostUpdate() {
+        // Log score updates
+        System.out.println("GameScore updated: " + this.id);
+    }
+
+    @PostRemove
+    protected void onRemove() {
+        // Log score deletion
+        System.out.println("GameScore deleted: " + this.id);
+    }
 }
