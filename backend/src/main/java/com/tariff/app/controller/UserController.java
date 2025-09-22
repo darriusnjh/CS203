@@ -10,30 +10,81 @@ import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
 import com.tariff.app.dto.UserSignupRequest;
 import com.tariff.app.dto.UserSignupResponse;
+import com.tariff.app.service.JwtService;
 import com.tariff.app.service.UserService;
+
+import io.jsonwebtoken.Claims;
 
 @RestController
 @RequestMapping("/api/login")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
+    // TODO check if user is already logged in, if yes refuse api
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request ){
+    public ResponseEntity<UserLoginResponse> login(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
+            @RequestBody UserLoginRequest request) {
+
+        // If a cookie exists and is valid JWT, refuse the connection
+        if (!cookieCheck.equals("") && JwtService.validateJwt(cookieCheck)) {
+            return ResponseEntity.status(409).body(null);
+        }
+
+        // If no cookies, continue
         UserLoginResponse response = userService.loginUser(request);
-        String jwt = userService.createJwt(request.getUsername(), "testing");
-        
-        ResponseCookie cookie = ResponseCookie.from("jwt",jwt).build();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
+        // If successful login, create a cookie and send it with request
+        if (response.getMessage().contains("succeeded")) {
+            String jwt = JwtService.createJwt(request.getUsername(), "testing");
+            ResponseCookie cookie = JwtService.createJwtCookie(jwt);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
+        } else {
+            // Login fail
+            return ResponseEntity.status(401).body(response);
+        }
+
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserSignupResponse> signup(@RequestBody UserSignupRequest request){
+    public ResponseEntity<UserSignupResponse> signup(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
+            @RequestBody UserSignupRequest request) {
+        // If a cookie exists and is valid JWT, refuse the connection
+        if (!cookieCheck.equals("") && JwtService.validateJwt(cookieCheck)) {
+            return ResponseEntity.status(409).body(null);
+        }
+
         UserSignupResponse response = userService.signupUser(request);
-        return ResponseEntity.ok(response);
-        
+        if (response.getUser() == null) {
+            // sign up fail
+            return ResponseEntity.status(401).body(response);
+        }
+        // If successful sign up, create cookie and send it along
+        String jwt = JwtService.createJwt(response.getUsername(), "testing");
+        ResponseCookie cookie = JwtService.createJwtCookie(jwt);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
+
     }
-    
+
+    // TODO logout
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck) {
+
+        // Check if user has cookies
+        if (!cookieCheck.equals("")) {
+            Claims claim = JwtService.validateJwtandReturnClaim(cookieCheck);
+            if (claim != null) {
+                String username = claim.getSubject();
+
+                // TODO update the last_logout column for the user / JWT blacklist table
+
+            }
+
+        }
+        ResponseCookie cookie = JwtService.createEmptyCookie();
+
+        return ResponseEntity.status(204).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
+    }
+
 }
