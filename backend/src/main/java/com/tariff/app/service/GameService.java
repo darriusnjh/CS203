@@ -26,8 +26,8 @@ public class GameService {
     @Autowired
     private UserRepository userRepository;
 
-    public GameScoreResponse saveGameScore(GameScoreRequest request, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public GameScoreResponse saveGameScore(GameScoreRequest request, String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         GameScore gameScore = new GameScore();
@@ -46,8 +46,8 @@ public class GameService {
         return convertToResponse(savedScore);
     }
 
-    public List<GameScoreResponse> getUserGameScores(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public List<GameScoreResponse> getUserGameScores(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<GameScore> scores = gameScoreRepository.findByUserOrderByCreatedAtDesc(user);
@@ -56,8 +56,8 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
-    public List<GameScoreResponse> getUserGameScoresByType(String userEmail, String gameType) {
-        User user = userRepository.findByEmail(userEmail)
+    public List<GameScoreResponse> getUserGameScoresByType(String username, String gameType) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<GameScore> scores = gameScoreRepository.findByUserAndGameTypeOrderByCreatedAtDesc(user, gameType);
@@ -66,8 +66,8 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<GameScoreResponse> getUserBestScore(String userEmail, String gameType) {
-        User user = userRepository.findByEmail(userEmail)
+    public Optional<GameScoreResponse> getUserBestScore(String username, String gameType) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Optional<GameScore> bestScore = gameScoreRepository.findBestScoreByUserAndGameType(user, gameType);
@@ -90,37 +90,37 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
-    public Long getUserTotalPoints(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public Long getUserTotalPoints(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return gameScoreRepository.getTotalPointsByUser(user);
     }
 
-    public Long getUserGamesPlayed(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public Long getUserGamesPlayed(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return gameScoreRepository.countGamesPlayedByUser(user);
     }
 
-    public Long getUserGamesPlayedByType(String userEmail, String gameType) {
-        User user = userRepository.findByEmail(userEmail)
+    public Long getUserGamesPlayedByType(String username, String gameType) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return gameScoreRepository.countGamesPlayedByUserAndGameType(user, gameType);
     }
 
-    public Double getUserAverageScore(String userEmail, String gameType) {
-        User user = userRepository.findByEmail(userEmail)
+    public Double getUserAverageScore(String username, String gameType) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Double avgScore = gameScoreRepository.getAverageScoreByUserAndGameType(user, gameType);
         return avgScore != null ? avgScore : 0.0;
     }
 
-    public List<GameScoreResponse> getUserRecentScores(String userEmail, int days) {
-        User user = userRepository.findByEmail(userEmail)
+    public List<GameScoreResponse> getUserRecentScores(String username, int days) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         LocalDateTime startDate = LocalDateTime.now().minusDays(days);
@@ -150,7 +150,7 @@ public class GameService {
         LeaderboardResponse response = new LeaderboardResponse();
         response.setUserId(gameScore.getUser().getId());
         response.setUsername(gameScore.getUser().getUsername());
-        response.setEmail(gameScore.getUser().getEmail());
+        response.setEmail(gameScore.getUser().getUsername()); // Using username as email since User doesn't have email
         response.setGameType(gameScore.getGameType());
         response.setScore(gameScore.getScore());
         response.setPointsEarned(gameScore.getPointsEarned());

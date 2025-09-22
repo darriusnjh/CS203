@@ -67,4 +67,13 @@ public class JwtService {
             return false;
         }
     }
+
+    public static String extractUsername(String jwtString) {
+        try {
+            Claims claim = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtString).getPayload();
+            return claim.getSubject();
+        } catch (JwtException e) {
+            return null;
+        }
+    }
 }
