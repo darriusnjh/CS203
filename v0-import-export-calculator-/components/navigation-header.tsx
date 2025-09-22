@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginDialog } from "@/components/login-dialog"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/components/auth-context"
-import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus, ChevronDown, BookOpen, HelpCircle, FileText, Users, Mail, Shield, FileCheck } from "lucide-react"
+import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus, ChevronDown, BookOpen, HelpCircle, FileText, Users, Mail, Shield, FileCheck, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function NavigationHeader() {
@@ -109,6 +109,20 @@ export function NavigationHeader() {
             >
               <Calculator className="h-4 w-4" />
               Calculate
+            </Link>
+
+            {/* Games Button */}
+            <Link
+              href="/games"
+              className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                isActive("/games")
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              <Gamepad2 className="h-4 w-4" />
+              Games
             </Link>
 
             {/* Resources Dropdown */}
@@ -234,6 +248,24 @@ export function NavigationHeader() {
                 <div>
                   <div className="font-medium">Calculate</div>
                   <div className="text-xs text-muted-foreground">Tariff Calculator</div>
+                </div>
+              </Link>
+
+              {/* Games */}
+              <Link
+                href="/games"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-3 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                  isActive("/games")
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                <Gamepad2 className="h-5 w-5" />
+                <div>
+                  <div className="font-medium">Games</div>
+                  <div className="text-xs text-muted-foreground">Interactive Challenges</div>
                 </div>
               </Link>
 
