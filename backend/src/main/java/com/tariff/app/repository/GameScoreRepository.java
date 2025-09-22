@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
-public interface GameScoreRepository extends JpaRepository<GameScore, Long> {
+public interface GameScoreRepository extends JpaRepository<GameScore, UUID> {
     
     // Find all scores for a specific user
     List<GameScore> findByUserOrderByCreatedAtDesc(User user);
@@ -65,4 +68,45 @@ public interface GameScoreRepository extends JpaRepository<GameScore, Long> {
     // Find recent scores for a specific user
     @Query("SELECT gs FROM GameScore gs WHERE gs.user = :user AND gs.createdAt >= :sevenDaysAgo ORDER BY gs.createdAt DESC")
     List<GameScore> findRecentScoresByUser(@Param("user") User user, @Param("sevenDaysAgo") LocalDateTime sevenDaysAgo);
+    
+    // Paginated queries for better performance
+    Page<GameScore> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+    Page<GameScore> findByUserAndGameTypeOrderByCreatedAtDesc(User user, String gameType, Pageable pageable);
+    Page<GameScore> findByGameTypeOrderByScoreDesc(String gameType, Pageable pageable);
+    
+    // Statistics queries
+    @Query("SELECT gs.gameType, COUNT(gs), AVG(gs.score), MAX(gs.score), MIN(gs.score) " +
+           "FROM GameScore gs WHERE gs.user = :user GROUP BY gs.gameType")
+    List<Object[]> getGameStatisticsByUser(@Param("user") User user);
+    
+    @Query("SELECT gs.gameType, COUNT(gs), AVG(gs.score), MAX(gs.score), MIN(gs.score) " +
+           "FROM GameScore gs GROUP BY gs.gameType")
+    List<Object[]> getGlobalGameStatistics();
+    
+    // Leaderboard queries with user information
+    @Query("SELECT gs FROM GameScore gs JOIN FETCH gs.user ORDER BY gs.score DESC")
+    List<GameScore> findTopScoresWithUser();
+    
+    @Query("SELECT gs FROM GameScore gs JOIN FETCH gs.user WHERE gs.gameType = :gameType ORDER BY gs.score DESC")
+    List<GameScore> findTopScoresByGameTypeWithUser(@Param("gameType") String gameType);
+    
+    // Streak calculations
+    @Query("SELECT COUNT(DISTINCT DATE(gs.createdAt)) FROM GameScore gs WHERE gs.user = :user " +
+           "AND gs.createdAt >= :startDate AND gs.createdAt <= :endDate")
+    Long countDistinctPlayDays(@Param("user") User user, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
+    // Performance metrics
+    @Query("SELECT gs FROM GameScore gs WHERE gs.user = :user AND gs.timeSpent IS NOT NULL " +
+           "ORDER BY gs.timeSpent ASC")
+    List<GameScore> findFastestGamesByUser(@Param("user") User user);
+    
+    @Query("SELECT gs FROM GameScore gs WHERE gs.user = :user AND gs.movesUsed IS NOT NULL " +
+           "ORDER BY gs.movesUsed ASC")
+    List<GameScore> findMostEfficientGamesByUser(@Param("user") User user);
+    
+    // Daily/weekly/monthly aggregations
+    @Query("SELECT DATE(gs.createdAt), COUNT(gs), SUM(gs.pointsEarned) " +
+           "FROM GameScore gs WHERE gs.user = :user AND gs.createdAt >= :startDate " +
+           "GROUP BY DATE(gs.createdAt) ORDER BY DATE(gs.createdAt)")
+    List<Object[]> getDailyStatsByUser(@Param("user") User user, @Param("startDate") LocalDateTime startDate);
 }
