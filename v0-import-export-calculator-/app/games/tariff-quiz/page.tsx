@@ -342,48 +342,50 @@ export default function TariffQuizPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
+          <header className="flex items-center gap-4 mb-6">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/games">
-                <ArrowLeft className="h-4 w-4 mr-2" />
+              <Link href="/games" aria-label="Return to games page">
+                <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
                 Back to Games
               </Link>
             </Button>
             <div className="flex-1">
               <h1 className="text-3xl font-bold flex items-center gap-3">
-                <Brain className="h-8 w-8 text-primary" />
+                <Brain className="h-8 w-8 text-primary" aria-hidden="true" />
                 Tariff Quiz Challenge
               </h1>
               <p className="text-muted-foreground mt-2">
                 Test your knowledge of tariffs, trade policies, and regulations
               </p>
             </div>
-          </div>
+          </header>
 
           {/* Progress and Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" aria-label="Quiz Progress">
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <Target className="h-5 w-5 text-primary" />
+                  <Target className="h-5 w-5 text-primary" aria-hidden="true" />
                   <div>
                     <p className="text-sm text-muted-foreground">Progress</p>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold" aria-label={`Question ${currentQuestionIndex + 1} of ${questions.length}`}>
                       {currentQuestionIndex + 1} / {questions.length}
                     </p>
                   </div>
                 </div>
-                <Progress value={progress} className="mt-2" />
+                <Progress value={progress} className="mt-2" aria-label={`${Math.round(progress)}% complete`} />
               </CardContent>
             </Card>
             
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-blue-600" />
+                  <Clock className="h-5 w-5 text-blue-600" aria-hidden="true" />
                   <div>
                     <p className="text-sm text-muted-foreground">Time Spent</p>
-                    <p className="text-lg font-semibold">{formatTime(timeSpent)}</p>
+                    <p className="text-lg font-semibold" aria-label={`Time spent: ${formatTime(timeSpent)}`}>
+                      {formatTime(timeSpent)}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -392,10 +394,10 @@ export default function TariffQuizPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <Star className="h-5 w-5 text-purple-600" />
+                  <Star className="h-5 w-5 text-purple-600" aria-hidden="true" />
                   <div>
                     <p className="text-sm text-muted-foreground">Points Available</p>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold" aria-label={`${answers.filter(answer => answer !== null).length * 10} points available`}>
                       {answers.filter(answer => answer !== null).length * 10}
                     </p>
                   </div>
@@ -408,10 +410,10 @@ export default function TariffQuizPage() {
           <Card className="mb-6">
             <CardHeader>
               <div className="flex items-center justify-between mb-4">
-                <Badge className={getDifficultyColor(currentQuestion.difficulty)}>
+                <Badge className={getDifficultyColor(currentQuestion.difficulty)} aria-label={`Difficulty: ${currentQuestion.difficulty}`}>
                   {currentQuestion.difficulty}
                 </Badge>
-                <Badge variant="outline">
+                <Badge variant="outline" aria-label={`Category: ${currentQuestion.category}`}>
                   {currentQuestion.category}
                 </Badge>
               </div>
@@ -424,68 +426,73 @@ export default function TariffQuizPage() {
             </CardHeader>
             
             <CardContent className="space-y-4">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = selectedAnswer === index
-                const isCorrect = index === currentQuestion.correctAnswer
-                const isWrong = showResult && isSelected && !isCorrect
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showResult}
-                    className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                      showResult
-                        ? isCorrect
-                          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                          : isWrong
-                          ? "border-red-500 bg-red-50 dark:bg-red-900/20"
-                          : "border-gray-200 dark:border-gray-700"
-                        : isSelected
-                        ? "border-primary bg-primary/10"
-                        : "border-gray-200 dark:border-gray-700 hover:border-primary/50 hover:bg-primary/5"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+              <fieldset>
+                <legend className="sr-only">Answer options for question {currentQuestionIndex + 1}</legend>
+                {currentQuestion.options.map((option, index) => {
+                  const isSelected = selectedAnswer === index
+                  const isCorrect = index === currentQuestion.correctAnswer
+                  const isWrong = showResult && isSelected && !isCorrect
+                  
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={showResult}
+                      aria-pressed={isSelected}
+                      aria-describedby={showResult ? `explanation-${index}` : undefined}
+                      className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
                         showResult
                           ? isCorrect
-                            ? "border-green-500 bg-green-500"
+                            ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                             : isWrong
-                            ? "border-red-500 bg-red-500"
-                            : "border-gray-300"
+                            ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                            : "border-gray-200 dark:border-gray-700"
                           : isSelected
-                          ? "border-primary bg-primary"
-                          : "border-gray-300"
-                      }`}>
-                        {showResult && isCorrect && (
-                          <CheckCircle className="h-4 w-4 text-white" />
-                        )}
-                        {showResult && isWrong && (
-                          <XCircle className="h-4 w-4 text-white" />
-                        )}
-                        {!showResult && isSelected && (
-                          <div className="w-2 h-2 bg-white rounded-full" />
-                        )}
-                      </div>
-                      <span className={`font-medium ${
-                        showResult
-                          ? isCorrect
-                            ? "text-green-700 dark:text-green-300"
-                            : isWrong
-                            ? "text-red-700 dark:text-red-300"
+                          ? "border-primary bg-primary/10"
+                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50 hover:bg-primary/5"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          showResult
+                            ? isCorrect
+                              ? "border-green-500 bg-green-500"
+                              : isWrong
+                              ? "border-red-500 bg-red-500"
+                              : "border-gray-300"
+                            : isSelected
+                            ? "border-primary bg-primary"
+                            : "border-gray-300"
+                        }`} aria-hidden="true">
+                          {showResult && isCorrect && (
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          )}
+                          {showResult && isWrong && (
+                            <XCircle className="h-4 w-4 text-white" />
+                          )}
+                          {!showResult && isSelected && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <span className={`font-medium ${
+                          showResult
+                            ? isCorrect
+                              ? "text-green-700 dark:text-green-300"
+                              : isWrong
+                              ? "text-red-700 dark:text-red-300"
+                              : ""
                             : ""
-                          : ""
-                      }`}>
-                        {option}
-                      </span>
-                    </div>
-                  </button>
-                )
-              })}
+                        }`}>
+                          {option}
+                        </span>
+                      </div>
+                    </button>
+                  )
+                })}
+              </fieldset>
 
               {showResult && (
-                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg" id="explanation" role="region" aria-label="Answer explanation">
                   <h4 className="font-semibold mb-2">Explanation:</h4>
                   <p className="text-sm text-muted-foreground">
                     {currentQuestion.explanation}
@@ -499,11 +506,12 @@ export default function TariffQuizPage() {
                     onClick={handleSubmitAnswer} 
                     disabled={selectedAnswer === null}
                     size="lg"
+                    aria-label="Submit your selected answer"
                   >
                     Submit Answer
                   </Button>
                 ) : (
-                  <Button onClick={handleNextQuestion} size="lg">
+                  <Button onClick={handleNextQuestion} size="lg" aria-label={currentQuestionIndex < questions.length - 1 ? "Go to next question" : "Finish quiz"}>
                     {currentQuestionIndex < questions.length - 1 ? "Next Question" : "Finish Quiz"}
                   </Button>
                 )}

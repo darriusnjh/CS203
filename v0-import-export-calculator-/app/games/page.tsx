@@ -149,9 +149,9 @@ export default function GamesPage() {
       
       <main className="container mx-auto px-4 py-8">
         {/* Header Section */}
-        <div className="text-center mb-8">
+        <header className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
+            <div className="p-3 bg-primary/10 rounded-full" aria-hidden="true">
               <Gamepad2 className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-4xl font-bold text-foreground">Games & Challenges</h1>
@@ -159,19 +159,21 @@ export default function GamesPage() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Test your knowledge, build trade routes, and compete with others in our interactive tariff and trade games.
           </p>
-        </div>
+        </header>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" aria-label="User Statistics">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
+                <div className="p-2 bg-primary/10 rounded-lg" aria-hidden="true">
                   <Trophy className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Points</p>
-                  <p className="text-2xl font-bold">{userStats.totalPoints.toLocaleString()}</p>
+                  <p className="text-2xl font-bold" aria-label={`${userStats.totalPoints.toLocaleString()} total points`}>
+                    {userStats.totalPoints.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -180,12 +182,14 @@ export default function GamesPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg" aria-hidden="true">
                   <Zap className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Games Played</p>
-                  <p className="text-2xl font-bold">{userStats.gamesPlayed}</p>
+                  <p className="text-2xl font-bold" aria-label={`${userStats.gamesPlayed} games played`}>
+                    {userStats.gamesPlayed}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -194,12 +198,14 @@ export default function GamesPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg" aria-hidden="true">
                   <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Current Streak</p>
-                  <p className="text-2xl font-bold">{userStats.streak} days</p>
+                  <p className="text-2xl font-bold" aria-label={`${userStats.streak} day streak`}>
+                    {userStats.streak} days
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -208,12 +214,14 @@ export default function GamesPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg" aria-hidden="true">
                   <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Global Rank</p>
-                  <p className="text-2xl font-bold">#{userStats.rank}</p>
+                  <p className="text-2xl font-bold" aria-label={`Rank ${userStats.rank}`}>
+                    #{userStats.rank}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -222,29 +230,29 @@ export default function GamesPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Games Section */}
-          <div className="lg:col-span-2">
+          <section className="lg:col-span-2" aria-label="Available Games">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Available Games</h2>
               <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-auto">
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="Quiz">Quiz</TabsTrigger>
-                  <TabsTrigger value="Strategy">Strategy</TabsTrigger>
-                  <TabsTrigger value="Puzzle">Puzzle</TabsTrigger>
-                  <TabsTrigger value="Daily">Daily</TabsTrigger>
+                <TabsList role="tablist" aria-label="Game category filter">
+                  <TabsTrigger value="all" role="tab" aria-selected={selectedCategory === "all"}>All</TabsTrigger>
+                  <TabsTrigger value="Quiz" role="tab" aria-selected={selectedCategory === "Quiz"}>Quiz</TabsTrigger>
+                  <TabsTrigger value="Strategy" role="tab" aria-selected={selectedCategory === "Strategy"}>Strategy</TabsTrigger>
+                  <TabsTrigger value="Puzzle" role="tab" aria-selected={selectedCategory === "Puzzle"}>Puzzle</TabsTrigger>
+                  <TabsTrigger value="Daily" role="tab" aria-selected={selectedCategory === "Daily"}>Daily</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="grid" aria-label="Game cards">
               {filteredGames.map((game) => {
                 const Icon = game.icon
                 return (
-                  <Card key={game.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                  <Card key={game.id} className="hover:shadow-lg transition-shadow cursor-pointer group" role="gridcell">
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                          <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors" aria-hidden="true">
                             <Icon className="h-6 w-6 text-primary" />
                           </div>
                           <div>
@@ -256,14 +264,14 @@ export default function GamesPage() {
                         </div>
                         <div className="flex flex-col gap-2">
                           {game.isNew && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Star className="h-3 w-3 mr-1" />
+                            <Badge variant="secondary" className="text-xs" aria-label="New game">
+                              <Star className="h-3 w-3 mr-1" aria-hidden="true" />
                               New
                             </Badge>
                           )}
                           {game.isDaily && (
-                            <Badge variant="default" className="text-xs">
-                              <Calendar className="h-3 w-3 mr-1" />
+                            <Badge variant="default" className="text-xs" aria-label="Daily challenge">
+                              <Calendar className="h-3 w-3 mr-1" aria-hidden="true" />
                               Daily
                             </Badge>
                           )}
@@ -272,21 +280,21 @@ export default function GamesPage() {
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="flex items-center justify-between mb-4">
-                        <Badge className={getDifficultyColor(game.difficulty)}>
+                        <Badge className={getDifficultyColor(game.difficulty)} aria-label={`Difficulty: ${game.difficulty}`}>
                           {game.difficulty}
                         </Badge>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
-                            <Award className="h-4 w-4" />
-                            {game.points} pts
+                            <Award className="h-4 w-4" aria-hidden="true" />
+                            <span aria-label={`${game.points} points`}>{game.points} pts</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            {game.estimatedTime}
+                            <Clock className="h-4 w-4" aria-hidden="true" />
+                            <span aria-label={`Estimated time: ${game.estimatedTime}`}>{game.estimatedTime}</span>
                           </div>
                         </div>
                       </div>
-                      <Button className="w-full" size="sm" asChild>
+                      <Button className="w-full" size="sm" asChild aria-label={`Play ${game.title}`}>
                         <Link href={`/games/${game.id}`}>
                           Play Game
                         </Link>
