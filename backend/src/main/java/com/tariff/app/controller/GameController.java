@@ -20,16 +20,13 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @Autowired
-    private JwtService jwtService;
-
     @PostMapping("/score")
     public ResponseEntity<GameScoreResponse> saveGameScore(
             @Valid @RequestBody GameScoreRequest request,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        GameScoreResponse response = gameService.saveGameScore(request, userEmail);
+        String username = JwtService.extractUsername(token.substring(7));
+        GameScoreResponse response = gameService.saveGameScore(request, username);
         return ResponseEntity.ok(response);
     }
 
@@ -37,8 +34,8 @@ public class GameController {
     public ResponseEntity<List<GameScoreResponse>> getUserGameScores(
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        List<GameScoreResponse> scores = gameService.getUserGameScores(userEmail);
+        String username = JwtService.extractUsername(token.substring(7));
+        List<GameScoreResponse> scores = gameService.getUserGameScores(username);
         return ResponseEntity.ok(scores);
     }
 
@@ -47,8 +44,8 @@ public class GameController {
             @PathVariable String gameType,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        List<GameScoreResponse> scores = gameService.getUserGameScoresByType(userEmail, gameType);
+        String username = JwtService.extractUsername(token.substring(7));
+        List<GameScoreResponse> scores = gameService.getUserGameScoresByType(username, gameType);
         return ResponseEntity.ok(scores);
     }
 
@@ -57,8 +54,8 @@ public class GameController {
             @PathVariable String gameType,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        return gameService.getUserBestScore(userEmail, gameType)
+        String username = JwtService.extractUsername(token.substring(7));
+        return gameService.getUserBestScore(username, gameType)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -84,8 +81,8 @@ public class GameController {
     public ResponseEntity<Long> getUserTotalPoints(
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        Long totalPoints = gameService.getUserTotalPoints(userEmail);
+        String username = JwtService.extractUsername(token.substring(7));
+        Long totalPoints = gameService.getUserTotalPoints(username);
         return ResponseEntity.ok(totalPoints);
     }
 
@@ -93,8 +90,8 @@ public class GameController {
     public ResponseEntity<Long> getUserGamesPlayed(
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        Long gamesPlayed = gameService.getUserGamesPlayed(userEmail);
+        String username = JwtService.extractUsername(token.substring(7));
+        Long gamesPlayed = gameService.getUserGamesPlayed(username);
         return ResponseEntity.ok(gamesPlayed);
     }
 
@@ -103,8 +100,8 @@ public class GameController {
             @PathVariable String gameType,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        Long gamesPlayed = gameService.getUserGamesPlayedByType(userEmail, gameType);
+        String username = JwtService.extractUsername(token.substring(7));
+        Long gamesPlayed = gameService.getUserGamesPlayedByType(username, gameType);
         return ResponseEntity.ok(gamesPlayed);
     }
 
@@ -113,8 +110,8 @@ public class GameController {
             @PathVariable String gameType,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        Double averageScore = gameService.getUserAverageScore(userEmail, gameType);
+        String username = JwtService.extractUsername(token.substring(7));
+        Double averageScore = gameService.getUserAverageScore(username, gameType);
         return ResponseEntity.ok(averageScore);
     }
 
@@ -123,8 +120,8 @@ public class GameController {
             @RequestParam(defaultValue = "7") int days,
             @RequestHeader("Authorization") String token) {
         
-        String userEmail = jwtService.extractUsername(token.substring(7));
-        List<GameScoreResponse> recentScores = gameService.getUserRecentScores(userEmail, days);
+        String username = JwtService.extractUsername(token.substring(7));
+        List<GameScoreResponse> recentScores = gameService.getUserRecentScores(username, days);
         return ResponseEntity.ok(recentScores);
     }
 }

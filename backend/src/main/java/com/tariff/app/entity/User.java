@@ -1,6 +1,6 @@
 package com.tariff.app.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -32,7 +32,7 @@ public class User {
     private OffsetDateTime lastLogin;
 
 
-    private static final Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
+    private static final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
     // Default constructor
     public User() {

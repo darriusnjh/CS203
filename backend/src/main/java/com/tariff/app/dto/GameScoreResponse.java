@@ -1,9 +1,10 @@
 package com.tariff.app.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class GameScoreResponse {
-    private Long id;
+    private UUID id;
     private String gameType;
     private Integer score;
     private Integer maxScore;
@@ -17,7 +18,7 @@ public class GameScoreResponse {
     // Constructors
     public GameScoreResponse() {}
 
-    public GameScoreResponse(Long id, String gameType, Integer score, Integer pointsEarned) {
+    public GameScoreResponse(UUID id, String gameType, Integer score, Integer pointsEarned) {
         this.id = id;
         this.gameType = gameType;
         this.score = score;
@@ -25,11 +26,11 @@ public class GameScoreResponse {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

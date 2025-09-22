@@ -108,6 +108,76 @@ const questions: Question[] = [
     explanation: "FTAs are designed to eliminate or significantly reduce tariffs and other trade barriers between participating countries.",
     category: "Trade Agreements",
     difficulty: "Medium"
+  },
+  {
+    id: 6,
+    question: "Which country is the world's largest exporter?",
+    options: [
+      "United States",
+      "China",
+      "Germany",
+      "Japan"
+    ],
+    correctAnswer: 1,
+    explanation: "China has been the world's largest exporter since 2009, exporting goods worth over $3 trillion annually.",
+    category: "Global Trade",
+    difficulty: "Hard"
+  },
+  {
+    id: 7,
+    question: "What is dumping in international trade?",
+    options: [
+      "Exporting goods at prices below their domestic market value",
+      "Importing goods illegally",
+      "Destroying excess inventory",
+      "Selling goods at premium prices"
+    ],
+    correctAnswer: 0,
+    explanation: "Dumping occurs when a company exports goods at prices lower than their normal value in the domestic market.",
+    category: "Trade Practices",
+    difficulty: "Hard"
+  },
+  {
+    id: 8,
+    question: "Which document is required for most international shipments?",
+    options: [
+      "Commercial invoice",
+      "Bill of lading",
+      "Certificate of origin",
+      "All of the above"
+    ],
+    correctAnswer: 3,
+    explanation: "Most international shipments require a commercial invoice, bill of lading, and certificate of origin.",
+    category: "Documentation",
+    difficulty: "Medium"
+  },
+  {
+    id: 9,
+    question: "What is the difference between CIF and FOB?",
+    options: [
+      "CIF includes insurance and freight, FOB does not",
+      "FOB includes insurance and freight, CIF does not",
+      "They are the same thing",
+      "CIF is for exports, FOB is for imports"
+    ],
+    correctAnswer: 0,
+    explanation: "CIF (Cost, Insurance, Freight) includes insurance and freight costs, while FOB (Free on Board) does not.",
+    category: "Shipping Terms",
+    difficulty: "Hard"
+  },
+  {
+    id: 10,
+    question: "Which factor does NOT typically affect tariff rates?",
+    options: [
+      "Country of origin",
+      "Product classification",
+      "Trade agreements",
+      "Weather conditions"
+    ],
+    correctAnswer: 3,
+    explanation: "Weather conditions do not affect tariff rates, which are based on trade policies, agreements, and product classifications.",
+    category: "Tariff Factors",
+    difficulty: "Easy"
   }
 ]
 
@@ -334,7 +404,7 @@ export default function TariffQuizPage() {
                 </div>
               </CardContent>
             </Card>
-          </section>
+          </div>
 
           {/* Question Card */}
           <Card className="mb-6">

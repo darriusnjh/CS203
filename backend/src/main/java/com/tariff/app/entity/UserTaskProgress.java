@@ -1,43 +1,71 @@
 package com.tariff.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "user_task_progress")
+@Table(name = "user_task_progress",
+       indexes = {
+           @Index(name = "idx_user_task_progress_user_id", columnList = "user_id"),
+           @Index(name = "idx_user_task_progress_task_id", columnList = "task_id"),
+           @Index(name = "idx_user_task_progress_date", columnList = "task_date"),
+           @Index(name = "idx_user_task_progress_completed", columnList = "completed")
+       },
+       uniqueConstraints = {
+           @UniqueConstraint(name = "uk_user_task_progress_user_task_date", 
+                           columnNames = {"user_id", "task_id", "task_date"})
+       })
 public class UserTaskProgress {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_task_progress_user"))
+    @NotNull(message = "User is required")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "task_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_task_progress_task"))
+    @NotNull(message = "Task is required")
     private DailyTask task;
 
     @Column(name = "progress", nullable = false)
+    @NotNull(message = "Progress is required")
+    @Min(value = 0, message = "Progress must be non-negative")
     private Integer progress = 0;
 
     @Column(name = "completed", nullable = false)
+    @NotNull(message = "Completed flag is required")
     private Boolean completed = false;
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
     @Column(name = "points_earned")
+    @Min(value = 0, message = "Points earned must be non-negative")
     private Integer pointsEarned = 0;
 
     @Column(name = "task_date", nullable = false)
+    @NotNull(message = "Task date is required")
     private LocalDate taskDate;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     // Constructors
@@ -54,11 +82,11 @@ public class UserTaskProgress {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

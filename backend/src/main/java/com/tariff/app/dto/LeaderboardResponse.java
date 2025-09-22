@@ -3,7 +3,7 @@ package com.tariff.app.dto;
 import java.time.LocalDateTime;
 
 public class LeaderboardResponse {
-    private Long userId;
+    private java.util.UUID userId;
     private String username;
     private String email;
     private String gameType;
@@ -15,7 +15,7 @@ public class LeaderboardResponse {
     // Constructors
     public LeaderboardResponse() {}
 
-    public LeaderboardResponse(Long userId, String username, String gameType, Integer score) {
+    public LeaderboardResponse(java.util.UUID userId, String username, String gameType, Integer score) {
         this.userId = userId;
         this.username = username;
         this.gameType = gameType;
@@ -23,11 +23,11 @@ public class LeaderboardResponse {
     }
 
     // Getters and Setters
-    public Long getUserId() {
+    public java.util.UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(java.util.UUID userId) {
         this.userId = userId;
     }
 
