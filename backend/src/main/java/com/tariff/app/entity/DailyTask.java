@@ -68,10 +68,24 @@ public class DailyTask {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "task_type", nullable = false, length = 50)
+    @NotNull(message = "Task type is required")
+    @Size(max = 50, message = "Task type must not exceed 50 characters")
+    private String taskType;
+
+    @Column(name = "task_date", nullable = false)
+    @NotNull(message = "Task date is required")
+    private LocalDate taskDate;
+
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     // Constructors
@@ -93,11 +107,11 @@ public class DailyTask {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -163,6 +177,30 @@ public class DailyTask {
 
     public void setReward(String reward) {
         this.reward = reward;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public LocalDate getTaskDate() {
+        return taskDate;
+    }
+
+    public void setTaskDate(LocalDate taskDate) {
+        this.taskDate = taskDate;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public Boolean getActive() {

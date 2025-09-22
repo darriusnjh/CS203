@@ -32,7 +32,7 @@ public class User {
     private OffsetDateTime lastLogin;
 
 
-    private static final Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
+    private static final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
     // Default constructor
     public User() {
