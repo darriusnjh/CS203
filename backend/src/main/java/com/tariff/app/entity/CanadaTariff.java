@@ -1,10 +1,10 @@
 package com.tariff.app.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tariffrates_canada")
-public class CanadaTariff implements Tariff {
+public class CanadaTariff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
