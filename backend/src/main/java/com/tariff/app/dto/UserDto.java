@@ -1,14 +1,15 @@
 package com.tariff.app.dto;
 
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -25,4 +26,25 @@ public class UserDto {
     private OffsetDateTime updatedAt;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private OffsetDateTime lastLogin;
+    
+    // Manual setters to ensure they exist (Lombok compatibility issue)
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    public void setLastLogin(OffsetDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }

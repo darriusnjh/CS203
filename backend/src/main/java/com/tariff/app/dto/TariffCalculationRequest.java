@@ -14,7 +14,7 @@ public class TariffCalculationRequest {
     public TariffCalculationRequest() {}
     
     // Constructor with parameters
-    public TariffCalculationRequest(String hts8, Double itemValue, Double itemQuantity, String originCountry) {
+    public TariffCalculationRequest(String hts8, Double itemValue, Double itemQuantity, String originCountry, String countryOfArrival, String modeOfTransport, String entryDate, String loadingDate) {
         this.hts8 = hts8;
         this.itemValue = itemValue;
         this.itemQuantity = itemQuantity;
