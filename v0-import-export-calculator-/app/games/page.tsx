@@ -21,6 +21,7 @@ import {
   Calendar
 } from "lucide-react"
 import { NavigationHeader } from "@/components/navigation-header"
+import Link from "next/link"
 
 interface Game {
   id: string
@@ -285,8 +286,10 @@ export default function GamesPage() {
                           </div>
                         </div>
                       </div>
-                      <Button className="w-full" size="sm">
-                        Play Game
+                      <Button className="w-full" size="sm" asChild>
+                        <Link href={`/games/${game.id}`}>
+                          Play Game
+                        </Link>
                       </Button>
                     </CardContent>
                   </Card>
@@ -370,8 +373,10 @@ export default function GamesPage() {
                     </div>
                   ))}
                 </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
-                  View Full Leaderboard
+                <Button variant="outline" className="w-full mt-4" size="sm" asChild>
+                  <Link href="/games/leaderboard">
+                    View Full Leaderboard
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
