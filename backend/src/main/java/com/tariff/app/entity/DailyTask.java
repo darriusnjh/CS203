@@ -1,35 +1,65 @@
 package com.tariff.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "daily_tasks")
+@Table(name = "daily_tasks",
+       indexes = {
+           @Index(name = "idx_daily_tasks_date", columnList = "task_date"),
+           @Index(name = "idx_daily_tasks_type", columnList = "task_type"),
+           @Index(name = "idx_daily_tasks_active", columnList = "is_active")
+       })
 public class DailyTask {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "task_id", nullable = false, unique = true)
+    @Column(name = "task_id", nullable = false, unique = true, length = 50)
+    @NotNull(message = "Task ID is required")
+    @Size(max = 50, message = "Task ID must not exceed 50 characters")
     private String taskId;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 200)
+    @NotNull(message = "Title is required")
+    @Size(max = 200, message = "Title must not exceed 200 characters")
     private String title;
 
     @Column(name = "description", columnDefinition = "TEXT")
+    @Size(max = 1000, message = "Description must not exceed 1000 characters")
     private String description;
 
-    @Column(name = "category", nullable = false)
+    @Column(name = "category", nullable = false, length = 50)
+    @NotNull(message = "Category is required")
+    @Size(max = 50, message = "Category must not exceed 50 characters")
     private String category;
 
     @Column(name = "points", nullable = false)
+    @NotNull(message = "Points is required")
+    @Min(value = 0, message = "Points must be non-negative")
+    @Max(value = 1000, message = "Points must not exceed 1000")
     private Integer points;
 
-    @Column(name = "difficulty", nullable = false)
+    @Column(name = "difficulty", nullable = false, length = 20)
+    @NotNull(message = "Difficulty is required")
+    @Size(max = 20, message = "Difficulty must not exceed 20 characters")
     private String difficulty;
 
     @Column(name = "max_progress", nullable = false)
+    @NotNull(message = "Max progress is required")
+    @Min(value = 1, message = "Max progress must be at least 1")
+    @Max(value = 100, message = "Max progress must not exceed 100")
     private Integer maxProgress;
 
     @Column(name = "reward")
