@@ -373,11 +373,19 @@ export default function GamesPage() {
                     </div>
                   ))}
                 </div>
-                <Button variant="outline" className="w-full mt-4" size="sm" asChild>
-                  <Link href="/games/leaderboard">
-                    View Full Leaderboard
-                  </Link>
-                </Button>
+                <div className="space-y-2 mt-4">
+                  <Button variant="outline" className="w-full" size="sm" asChild>
+                    <Link href="/games/leaderboard">
+                      View Full Leaderboard
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="w-full" size="sm" asChild>
+                    <Link href="/games/daily-tasks">
+                      <Target className="h-4 w-4 mr-2" />
+                      Daily Tasks
+                    </Link>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
