@@ -5,7 +5,7 @@ import com.tariff.app.dto.GameScoreResponse;
 import com.tariff.app.dto.LeaderboardResponse;
 import com.tariff.app.service.GameService;
 import com.tariff.app.service.JwtService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

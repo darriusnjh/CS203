@@ -1,6 +1,6 @@
 package com.tariff.app.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;

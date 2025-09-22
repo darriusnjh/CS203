@@ -1,6 +1,6 @@
 package com.tariff.app.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
