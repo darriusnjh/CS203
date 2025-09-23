@@ -17,8 +17,14 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
     @Column(name = "password_hash", nullable = false)
-    private String password;
+    private String passwordHash;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 
     @Column(name = "created_at", nullable = false, updatable = false,
             columnDefinition = "TIMESTAMPTZ")
@@ -40,10 +46,10 @@ public class User {
     }
 
     // Constructor with parameters
-    public User(UUID id, String username, String password) {
+    public User(UUID id, String username, String passwordHash) {
         this.id = id;
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
     }
 
     public String getUsername() {
@@ -54,21 +60,29 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public void setHashPassword(String password) {
         String hashedPassword = encoder.encode(password);
-        this.password = hashedPassword;
+        this.passwordHash = hashedPassword;
     }
 
     public boolean verifyPassword(String rawPassword){
-        return encoder.matches(rawPassword, password);
+        return encoder.matches(rawPassword, passwordHash);
     }
 
     // Getters and setters for timestamp fields
@@ -102,6 +116,14 @@ public class User {
 
     public void setLastLogin(OffsetDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

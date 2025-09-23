@@ -8,11 +8,12 @@ import com.tariff.app.service.JwtService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,11 @@ public class ForumController {
 
 	@Autowired
 	private ForumService forumService;
+
+	@GetMapping("/test")
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("Forum API is working!");
+	}
 
 	@GetMapping("/categories")
 	public ResponseEntity<List<ForumCategoryDto>> categories() {
@@ -157,6 +163,17 @@ public class ForumController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/trending")
+	public ResponseEntity<Page<ForumPostResponse>> getTrendingPosts(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestHeader(value = "Authorization", required = false) String authHeader) {
+		UUID currentUserId = getUserIdFromJwt(authHeader);
+		Pageable pageable = PageRequest.of(page, size);
+		Page<ForumPostResponse> posts = forumService.getTrendingPosts(pageable, currentUserId);
+		return ResponseEntity.ok(posts);
+	}
+
 	private UUID getUserIdFromJwt(String jwtToken) {
 		if (jwtToken == null || jwtToken.isEmpty()) return null;
 		Claims claims = JwtService.validateJwtandReturnClaim(jwtToken);
@@ -165,86 +182,3 @@ public class ForumController {
 		return null;
 	}
 }
-
-package com.tariff.app.controller;
-
-import com.tariff.app.dto.CreatePostRequest;
-import com.tariff.app.dto.ForumCategoryDto;
-import com.tariff.app.dto.ForumPostResponse;
-import com.tariff.app.service.ForumService;
-import com.tariff.app.service.JwtService;
-import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
-
-@RestController
-@RequestMapping("/api/forum")
-@CrossOrigin(origins = "*")
-public class ForumController {
-
-    @Autowired
-    private ForumService forumService;
-
-    @GetMapping("/categories")
-    public ResponseEntity<List<ForumCategoryDto>> getCategories() {
-        return ResponseEntity.ok(forumService.getActiveCategories());
-    }
-
-    @GetMapping("/posts")
-    public ResponseEntity<Page<ForumPostResponse>> getAllPosts(
-            Pageable pageable,
-            @RequestParam(required = false) UUID categoryId,
-            @RequestParam(required = false) String search,
-            @CookieValue(name = "jwt", defaultValue = "") String jwtToken) {
-
-        UUID currentUserId = getUserIdFromJwt(jwtToken);
-
-        Page<ForumPostResponse> posts;
-        if (categoryId != null) {
-            posts = forumService.getPostsByCategory(categoryId, pageable, currentUserId);
-        } else if (search != null && !search.trim().isEmpty()) {
-            posts = forumService.searchPosts(search, pageable, currentUserId);
-        } else {
-            posts = forumService.getAllPosts(pageable, currentUserId);
-        }
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/posts/{id}")
-    public ResponseEntity<ForumPostResponse> getPost(
-            @PathVariable UUID id,
-            @CookieValue(name = "jwt", defaultValue = "") String jwtToken) {
-        UUID currentUserId = getUserIdFromJwt(jwtToken);
-        return ResponseEntity.ok(forumService.getPostById(id, currentUserId));
-    }
-
-    @PostMapping("/posts")
-    public ResponseEntity<ForumPostResponse> createPost(
-            @Valid @RequestBody CreatePostRequest request,
-            @CookieValue(name = "jwt", defaultValue = "") String jwtToken) {
-        if (jwtToken.isEmpty() || !JwtService.validateJwt(jwtToken)) {
-            return ResponseEntity.status(401).build();
-        }
-        UUID currentUserId = getUserIdFromJwt(jwtToken);
-        return ResponseEntity.ok(forumService.createPost(request, currentUserId));
-    }
-
-    private UUID getUserIdFromJwt(String jwtToken) {
-        if (jwtToken == null || jwtToken.isEmpty()) return null;
-        Claims claims = JwtService.validateJwtandReturnClaim(jwtToken);
-        if (claims == null) return null;
-        // Our JWT subject is username; we cannot directly get UUID without lookup here.
-        // For now, return null to keep endpoints working without auth context where needed.
-        return null;
-    }
-}
-
-
-
