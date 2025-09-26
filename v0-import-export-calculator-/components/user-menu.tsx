@@ -36,14 +36,14 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0 hover:bg-transparent focus:bg-transparent">
+        <button className="relative h-8 w-8 rounded-full p-0 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 border-0 bg-transparent">
           <Avatar className="h-8 w-8 ring-0 border-0">
             <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
             <AvatarFallback className="bg-muted text-muted-foreground">
               {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
