@@ -17,7 +17,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/')
+      router.push('/login')
     }
   }, [user, router])
 
@@ -27,7 +27,7 @@ export default function AccountPage() {
 
   const handleLogout = () => {
     logout()
-    router.push('/')
+    router.push('/login')
   }
 
   return (
