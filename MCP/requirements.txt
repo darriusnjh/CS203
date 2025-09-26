@@ -1,0 +1,17 @@
+# Core MCP and OpenAI
+fastmcp
+openai
+requests
+python-dotenv
+tiktoken
+pymongo
+
+# Vector store and embeddings
+langchain
+openpyxl
+langchain-community
+faiss-cpu
+pandas
+
+# Optional: type hints
+typing-extensions
