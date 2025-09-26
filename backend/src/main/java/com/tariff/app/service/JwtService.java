@@ -30,16 +30,22 @@ public class JwtService {
 
     public static ResponseCookie createJwtCookie(String jwt) {
         // ResponseCookie cookie = ResponseCookie.from("jwt", jwt).build();
-        ResponseCookie cookie = ResponseCookie.from("jwt", jwt).path("/").httpOnly(true).secure(true)
+        ResponseCookie cookie = ResponseCookie.from("jwt", jwt).path("/").httpOnly(true)
                 .maxAge(expirationMillis / 1000)
-                .sameSite("Strict").build();
+                .sameSite("None").build();
+        // ResponseCookie cookie = ResponseCookie.from("jwt", jwt).path("/").httpOnly(true).secure(true)
+        //         .maxAge(expirationMillis / 1000)
+        //         .sameSite("Strict").build();
         return cookie;
     }
 
     public static ResponseCookie createEmptyCookie() {
 
-        ResponseCookie cookie = ResponseCookie.from("jwt", "").path("/").httpOnly(true).secure(true).maxAge(0)
-                .sameSite("Strict").build();
+        ResponseCookie cookie = ResponseCookie.from("jwt", "").path("/").httpOnly(true).maxAge(0)
+                .sameSite("None").build();
+
+        // ResponseCookie cookie = ResponseCookie.from("jwt", "").path("/").httpOnly(true).secure(true).maxAge(0)
+        //         .sameSite("Strict").build();
 
         return cookie;
     }
