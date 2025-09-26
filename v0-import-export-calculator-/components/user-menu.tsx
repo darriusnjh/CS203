@@ -36,7 +36,11 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="relative h-8 w-8 p-0 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 border-0 bg-transparent rounded-none">
+        <button 
+          className="relative h-8 w-8 p-0 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 border-0 bg-transparent rounded-none"
+          aria-label="User menu"
+          aria-haspopup="menu"
+        >
           <Avatar className="h-8 w-8 ring-0 border-0 rounded-none">
             <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} className="rounded-none" />
             <AvatarFallback className="bg-muted text-muted-foreground rounded-none">
@@ -45,7 +49,13 @@ export function UserMenu() {
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount sideOffset={5}>
+      <DropdownMenuContent 
+        className="w-56" 
+        align="end" 
+        forceMount 
+        sideOffset={5}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.username || 'User'}</p>
@@ -55,16 +65,28 @@ export function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleAccountClick} onSelect={(e) => e.preventDefault()}>
+        <DropdownMenuItem 
+          onClick={handleAccountClick} 
+          onSelect={(e) => e.preventDefault()}
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+        >
           <User className="mr-2 h-4 w-4" />
           <span>Account</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSettingsClick} onSelect={(e) => e.preventDefault()}>
+        <DropdownMenuItem 
+          onClick={handleSettingsClick} 
+          onSelect={(e) => e.preventDefault()}
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+        >
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} onSelect={(e) => e.preventDefault()}>
+        <DropdownMenuItem 
+          onClick={handleLogout} 
+          onSelect={(e) => e.preventDefault()}
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
