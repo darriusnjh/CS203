@@ -34,17 +34,17 @@ export default function AccountPage() {
     <div className="bg-background">
       <NavigationHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Page Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Account Settings</h1>
-            <p className="text-muted-foreground text-lg">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Account Settings</h1>
+            <p className="text-muted-foreground text-base sm:text-lg">
               Manage your account information and preferences
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Profile Information */}
             <Card>
               <CardHeader>
@@ -57,16 +57,16 @@ export default function AccountPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                   <Avatar className="h-16 w-16">
                     <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
                     <AvatarFallback className="text-lg">
                       {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="font-semibold text-lg">{user.username || 'User'}</h3>
-                    <Badge variant="secondary">Premium Member</Badge>
+                    <Badge variant="secondary">Standard Member</Badge>
                   </div>
                 </div>
                 <Separator />
@@ -165,7 +165,7 @@ export default function AccountPage() {
             </Card>
 
             {/* Account Information */}
-            <Card className="md:col-span-2">
+            <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Account Information</CardTitle>
                 <CardDescription>
@@ -173,7 +173,7 @@ export default function AccountPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
