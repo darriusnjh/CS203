@@ -125,20 +125,28 @@ export default function CountryDashboard() {
       setLoading(true)
       setError(null)
       
+      console.log(`Fetching country data for: ${code}`)
+      
       // Fetch both dashboard data and product data in parallel
       const [dashboardResponse, productResponse] = await Promise.all([
         fetch(`http://localhost:8080/api/dashboard/data/${code}`),
         fetch(`http://localhost:8080/api/dashboard/products/${code}`)
       ])
       
+      console.log(`Dashboard response status: ${dashboardResponse.status}`)
+      console.log(`Product response status: ${productResponse.status}`)
+      
       if (!dashboardResponse.ok || !productResponse.ok) {
-        throw new Error("Failed to fetch country data")
+        throw new Error(`Failed to fetch country data: ${dashboardResponse.status}, ${productResponse.status}`)
       }
       
       const [dashboardResult, productResult] = await Promise.all([
         dashboardResponse.json(),
         productResponse.json()
       ])
+      
+      console.log("Dashboard data received:", dashboardResult)
+      console.log("Product data received:", productResult.length, "products")
       
       setData(dashboardResult)
       setProductData(productResult)
