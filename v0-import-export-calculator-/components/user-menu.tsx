@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from './auth-context'
 import { User, LogOut, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -36,17 +35,14 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar 
-          className="h-8 w-8 cursor-pointer hover:opacity-80 transition-opacity"
+        <div 
+          className="h-8 w-8 cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center bg-muted text-muted-foreground font-medium"
           aria-label="User menu"
           role="button"
           tabIndex={0}
         >
-          <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
-          <AvatarFallback className="bg-muted text-muted-foreground">
-            {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
-          </AvatarFallback>
-        </Avatar>
+          {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         className="w-56" 
