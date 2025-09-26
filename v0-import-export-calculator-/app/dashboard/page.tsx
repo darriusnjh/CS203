@@ -20,7 +20,8 @@ import {
   MapPin,
   DollarSign,
   Package,
-  Users
+  Users,
+  ArrowUpRight
 } from "lucide-react"
 import { NavigationHeader } from "@/components/navigation-header"
 import { TariffHeatmap } from "@/components/tariff-heatmap"
