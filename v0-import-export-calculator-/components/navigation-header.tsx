@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginDialog } from "@/components/login-dialog"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/components/auth-context"
-import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus, ChevronDown, BookOpen, HelpCircle, FileText, Users, Mail, Shield, FileCheck, Gamepad2 } from "lucide-react"
+import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus, ChevronDown, BookOpen, HelpCircle, FileText, Users, Mail, Shield, FileCheck, Gamepad2, Bot } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function NavigationHeader() {
@@ -123,6 +123,20 @@ export function NavigationHeader() {
             >
               <Gamepad2 className="h-4 w-4" />
               Games
+            </Link>
+
+            {/* Ask AI Button */}
+            <Link
+              href="/ask-ai"
+              className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                isActive("/ask-ai")
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              <Bot className="h-4 w-4" />
+              Ask AI
             </Link>
 
             {/* Resources Dropdown */}
@@ -266,6 +280,24 @@ export function NavigationHeader() {
                 <div>
                   <div className="font-medium">Games</div>
                   <div className="text-xs text-muted-foreground">Interactive Challenges</div>
+                </div>
+              </Link>
+
+              {/* Ask AI */}
+              <Link
+                href="/ask-ai"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-3 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                  isActive("/ask-ai")
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                <Bot className="h-5 w-5" />
+                <div>
+                  <div className="font-medium">Ask AI</div>
+                  <div className="text-xs text-muted-foreground">AI Assistant</div>
                 </div>
               </Link>
 
