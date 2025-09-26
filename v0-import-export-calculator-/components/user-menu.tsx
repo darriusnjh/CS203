@@ -51,9 +51,10 @@ export function UserMenu() {
       <DropdownMenuContent 
         className="w-56" 
         align="end" 
-        forceMount 
-        sideOffset={5}
+        sideOffset={8}
         onCloseAutoFocus={(e) => e.preventDefault()}
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
@@ -66,7 +67,6 @@ export function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={handleAccountClick} 
-          onSelect={(e) => e.preventDefault()}
           className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
         >
           <User className="mr-2 h-4 w-4" />
@@ -74,7 +74,6 @@ export function UserMenu() {
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={handleSettingsClick} 
-          onSelect={(e) => e.preventDefault()}
           className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
         >
           <Settings className="mr-2 h-4 w-4" />
@@ -83,7 +82,6 @@ export function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={handleLogout} 
-          onSelect={(e) => e.preventDefault()}
           className="cursor-pointer focus:bg-accent focus:text-accent-foreground text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
         >
           <LogOut className="mr-2 h-4 w-4" />
