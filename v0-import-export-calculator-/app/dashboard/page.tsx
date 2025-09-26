@@ -35,6 +35,9 @@ interface DashboardData {
   productCounts: Record<string, number>
   heatmapData: TariffHeatmapData[]
   topImportingCountries: TopImportingCountry[]
+  tradeAgreementInsights: any[]
+  productCategoryInsights: any[]
+  tariffTrendInsights: any[]
 }
 
 interface CountryTariffData {
@@ -46,6 +49,10 @@ interface CountryTariffData {
   totalProducts: number
   maxRate: number
   minRate: number
+  freeTradeProducts: number
+  highTariffProducts: number
+  tradeAgreementCoverage: number
+  topProductCategory: string
 }
 
 interface TariffHeatmapData {
