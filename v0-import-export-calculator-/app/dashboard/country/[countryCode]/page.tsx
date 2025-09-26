@@ -204,7 +204,7 @@ export default function CountryDashboard() {
     )
   }
 
-  if (error || !data) {
+  if (error || !data || !data.countryData || data.countryData.length === 0) {
     return (
       <div className="container mx-auto p-6">
         <div className="text-center">

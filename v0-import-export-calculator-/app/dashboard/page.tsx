@@ -266,7 +266,7 @@ export default function DashboardPage() {
 
         {/* Country Selection Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {filteredCountryData.map((country) => (
+          {filteredCountryData?.map((country) => (
             <Card 
               key={country.countryCode} 
               className="cursor-pointer hover:shadow-md transition-shadow"
@@ -301,9 +301,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Statistics Cards */}
-        {dashboardData && (
+        {dashboardData && dashboardData.countryData && (
           <TariffStatistics 
-            countryData={filteredCountryData}
+            countryData={filteredCountryData || []}
             totalCountries={dashboardData.countryData.length}
           />
         )}
@@ -339,12 +339,12 @@ export default function DashboardPage() {
                     Countries Overview
                   </CardTitle>
                   <CardDescription>
-                    {filteredCountryData.length} countries found
+                    {filteredCountryData?.length || 0} countries found
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {filteredCountryData.map((country) => (
+                    {filteredCountryData?.map((country) => (
                       <div
                         key={country.countryCode}
                         className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
@@ -398,7 +398,7 @@ export default function DashboardPage() {
           <TabsContent value="comparison" className="space-y-6">
             {dashboardData?.countryData && (
               <CountryComparisonChart 
-                data={filteredCountryData}
+                data={filteredCountryData || []}
               />
             )}
           </TabsContent>
