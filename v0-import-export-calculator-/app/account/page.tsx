@@ -164,31 +164,57 @@ export default function AccountPage() {
               </CardContent>
             </Card>
 
-            {/* Usage Statistics */}
+            {/* Account Information */}
             <Card className="md:col-span-2">
               <CardHeader>
-                <CardTitle>Usage Statistics</CardTitle>
+                <CardTitle>Account Information</CardTitle>
                 <CardDescription>
-                  Your tariff calculation history and usage
+                  Additional details about your account
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">127</p>
-                    <p className="text-sm text-muted-foreground">Calculations</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Last Updated</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          }) : 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Shield className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Account Type</p>
+                        <Badge variant="secondary">Standard</Badge>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">23</p>
-                    <p className="text-sm text-muted-foreground">Countries</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">$2.4M</p>
-                    <p className="text-sm text-muted-foreground">Total Value</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">15</p>
-                    <p className="text-sm text-muted-foreground">HTS Codes</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Username</p>
+                        <p className="text-sm text-muted-foreground font-mono">
+                          {user.username || 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Email</p>
+                        <p className="text-sm text-muted-foreground">
+                          Not provided
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
