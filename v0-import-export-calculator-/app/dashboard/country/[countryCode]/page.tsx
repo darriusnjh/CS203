@@ -79,6 +79,17 @@ interface DashboardData {
   tariffTrendInsights: TrendInsight[]
 }
 
+interface ProductTariffData {
+  hts8: string
+  briefDescription: string
+  mfnAdValRate: number | null
+  mfnSpecificRate: number | null
+  mfnOtherRate: number | null
+  rateType: string
+  productCategory: string
+  countryCode: string
+}
+
 const countryOptions = [
   { code: "US", name: "United States" },
   { code: "CN", name: "China" },
@@ -105,6 +116,7 @@ export default function CountryDashboard() {
   const router = useRouter()
   const [countryCode, setCountryCode] = useState<string>(params.countryCode as string)
   const [data, setData] = useState<DashboardData | null>(null)
+  const [productData, setProductData] = useState<ProductTariffData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -112,12 +124,24 @@ export default function CountryDashboard() {
     try {
       setLoading(true)
       setError(null)
-      const response = await fetch(`http://localhost:8080/api/dashboard/data/${code}`)
-      if (!response.ok) {
+      
+      // Fetch both dashboard data and product data in parallel
+      const [dashboardResponse, productResponse] = await Promise.all([
+        fetch(`http://localhost:8080/api/dashboard/data/${code}`),
+        fetch(`http://localhost:8080/api/dashboard/products/${code}`)
+      ])
+      
+      if (!dashboardResponse.ok || !productResponse.ok) {
         throw new Error("Failed to fetch country data")
       }
-      const result = await response.json()
-      setData(result)
+      
+      const [dashboardResult, productResult] = await Promise.all([
+        dashboardResponse.json(),
+        productResponse.json()
+      ])
+      
+      setData(dashboardResult)
+      setProductData(productResult)
     } catch (err) {
       setError("Failed to load country data. Please try again later.")
       console.error("Error fetching country data:", err)
@@ -276,6 +300,7 @@ export default function CountryDashboard() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
           <TabsTrigger value="imports">Import Analysis</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
@@ -303,6 +328,64 @@ export default function CountryDashboard() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="products" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Tariff Rates</CardTitle>
+              <CardDescription>
+                Detailed tariff rates for products imported to {countryName}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="text-sm text-gray-600">
+                  Showing {productData.length} products with tariff rates
+                </div>
+                <div className="max-h-96 overflow-y-auto">
+                  <div className="grid gap-2">
+                    {productData.slice(0, 100).map((product, index) => (
+                      <div key={index} className="border rounded-lg p-3 hover:bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-mono text-sm font-medium">{product.hts8}</span>
+                              <Badge variant="outline" className="text-xs">
+                                {product.productCategory}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                              {product.briefDescription}
+                            </p>
+                          </div>
+                          <div className="text-right ml-4">
+                            <div className="text-sm font-medium">
+                              {product.rateType === "Ad Valorem" && product.mfnAdValRate && (
+                                <span className="text-blue-600">{product.mfnAdValRate.toFixed(2)}%</span>
+                              )}
+                              {product.rateType === "Specific" && product.mfnSpecificRate && (
+                                <span className="text-green-600">${product.mfnSpecificRate.toFixed(3)}/unit</span>
+                              )}
+                              {product.rateType === "Other" && product.mfnOtherRate && (
+                                <span className="text-purple-600">{product.mfnOtherRate.toFixed(2)}%</span>
+                              )}
+                            </div>
+                            <div className="text-xs text-gray-500">{product.rateType}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {productData.length > 100 && (
+                  <div className="text-center text-sm text-gray-500">
+                    Showing first 100 products. Total: {productData.length} products
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="heatmap" className="space-y-4">
