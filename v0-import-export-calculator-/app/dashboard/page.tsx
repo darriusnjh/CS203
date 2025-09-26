@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -63,6 +64,7 @@ interface TopImportingCountry {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedCountry, setSelectedCountry] = useState<string>("all")
@@ -249,6 +251,42 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Country Selection Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {filteredCountryData.map((country) => (
+            <Card 
+              key={country.countryCode} 
+              className="cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => router.push(`/dashboard/country/${country.countryCode}`)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium text-sm">{country.countryCode}</span>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-gray-400" />
+                </div>
+                <h3 className="font-semibold text-sm mb-1">{country.countryName}</h3>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-500">Avg Rate:</span>
+                    <span className="font-medium">{country.averageMfnRate.toFixed(1)}%</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-500">Products:</span>
+                    <span className="font-medium">{country.totalProducts.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-500">Coverage:</span>
+                    <span className="font-medium">{country.tradeAgreementCoverage.toFixed(0)}%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
         {/* Statistics Cards */}
         {dashboardData && (
