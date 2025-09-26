@@ -117,17 +117,39 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => router.push('/settings')}
+                  >
+                    <User className="mr-2 h-4 w-4" />
                     Edit Profile
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => router.push('/settings')}
+                  >
+                    <Shield className="mr-2 h-4 w-4" />
                     Change Password
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    disabled
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
                     Notification Settings
+                    <Badge variant="secondary" className="ml-auto text-xs">Soon</Badge>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    disabled
+                  >
+                    <Shield className="mr-2 h-4 w-4" />
                     Privacy Settings
+                    <Badge variant="secondary" className="ml-auto text-xs">Soon</Badge>
                   </Button>
                 </div>
                 <Separator />
