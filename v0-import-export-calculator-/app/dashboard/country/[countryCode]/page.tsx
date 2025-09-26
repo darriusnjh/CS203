@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, TrendingUp, Globe, BarChart3 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowLeft, TrendingUp, Globe, BarChart3, Filter } from "lucide-react"
 import { NavigationHeader } from "@/components/navigation-header"
 
 interface CountryData {
@@ -82,6 +83,7 @@ export default function CountryDashboard() {
   const [productData, setProductData] = useState<ProductData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
 
   const fetchCountryData = async (code: string) => {
     try {
@@ -173,6 +175,18 @@ export default function CountryDashboard() {
 
   const countryName = countryOptions.find(c => c.code === countryCode)?.name || countryCode
 
+  // Get unique categories from import data
+  const categories = ["all", ...Array.from(new Set(importData.map(item => item.primaryImportCategory)))]
+  
+  // Filter data based on selected category
+  const filteredImportData = selectedCategory === "all" 
+    ? importData 
+    : importData.filter(item => item.primaryImportCategory === selectedCategory)
+  
+  const filteredHeatmapData = selectedCategory === "all"
+    ? heatmapData
+    : heatmapData // Heatmap doesn't have categories, so show all
+
   return (
     <div className="min-h-screen flex flex-col">
       <NavigationHeader />
@@ -247,6 +261,30 @@ export default function CountryDashboard() {
           </Card>
         </div>
 
+        {/* Category Filter */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="h-5 w-5" />
+              Filter by Category
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-64">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category === "all" ? "All Categories" : category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
@@ -292,7 +330,7 @@ export default function CountryDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {importData.slice(0, 5).map((country, index) => (
+                    {filteredImportData.slice(0, 5).map((country, index) => (
                       <div key={index} className="flex items-center justify-between p-3 rounded-lg border">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -383,7 +421,7 @@ export default function CountryDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {heatmapData.map((item, index) => (
+                  {filteredHeatmapData.map((item, index) => (
                     <div key={index} className="flex items-center justify-between p-3 rounded-lg border">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
@@ -415,7 +453,7 @@ export default function CountryDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {importData.map((country, index) => (
+                  {filteredImportData.map((country, index) => (
                     <div key={index} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-3">
@@ -429,7 +467,7 @@ export default function CountryDashboard() {
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-bold">{country.averageTariffRate.toFixed(1)}%</div>
-                          <div className="text-sm text-gray-500">Avg Rate</div>
+                          <div className="text-sm text-gray-500">Tariff Rate</div>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-4 text-sm">
