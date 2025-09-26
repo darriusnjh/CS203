@@ -28,11 +28,11 @@ interface TariffCalculation {
 }
 
 interface FormData {
-  htsCode: string
-  shipmentValue: string
-  shipmentQuantity: string
-  countryOfOrigin: string
-  countryOfArrival: string
+  hts8: string
+  itemValue: string
+  itemQuantity: string
+  originCountry: string
+  arrivalCountry: string
   modeOfTransport: string
   entryDate: string
   loadingDate: string
@@ -40,11 +40,11 @@ interface FormData {
 
 export default function TariffCalculator() {
   const [formData, setFormData] = useState<FormData>({
-    htsCode: "",
-    shipmentValue: "",
-    shipmentQuantity: "",
-    countryOfOrigin: "",
-    countryOfArrival: "US",
+    hts8: "",
+    itemValue: "",
+    itemQuantity: "",
+    originCountry: "",
+    arrivalCountry: "US",
     modeOfTransport: "",
     entryDate: "",
     loadingDate: "",
@@ -151,15 +151,15 @@ export default function TariffCalculator() {
 
           <TabsContent value="comparison">
             <CountryComparison
-              htsCode={formData.htsCode}
-              shipmentValue={Number.parseFloat(formData.shipmentValue) || 10000}
+              htsCode={formData.hts8}
+              shipmentValue={Number.parseFloat(formData.itemValue) || 10000}
             />
           </TabsContent>
 
           <TabsContent value="map">
             <WorldMap
-              selectedHtsCode={formData.htsCode}
-              shipmentValue={Number.parseFloat(formData.shipmentValue) || 10000}
+              selectedHtsCode={formData.hts8}
+              shipmentValue={Number.parseFloat(formData.itemValue) || 10000}
             />
           </TabsContent>
         </Tabs>

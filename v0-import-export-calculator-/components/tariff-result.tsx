@@ -21,11 +21,11 @@ interface TariffCalculation {
 }
 
 interface FormData {
-  htsCode: string
-  shipmentValue: string
-  shipmentQuantity: string
-  countryOfOrigin: string
-  countryOfArrival: string
+  hts8: string
+  itemValue: string
+  itemQuantity: string
+  originCountry: string
+  arrivalCountry: string
   modeOfTransport: string
   entryDate: string
   loadingDate: string
@@ -179,11 +179,11 @@ export function TariffResult({ calculation, formData }: TariffResultProps) {
                 <Badge variant="secondary">Calculation Details</Badge>
               </div>
               <div className="text-sm text-muted-foreground space-y-1">
-                <p>• HTS Code: {formData.htsCode}</p>
-                <p>• Origin: {getCountryName(formData.countryOfOrigin)}</p>
-                <p>• Destination: {getCountryName(formData.countryOfArrival) || "United States"}</p>
-                <p>• Shipment Value: ${Number.parseFloat(formData.shipmentValue).toLocaleString()}</p>
-                <p>• Shipment Quantity: {formData.shipmentQuantity}</p>
+                <p>• HTS Code: {formData.hts8}</p>
+                <p>• Origin: {getCountryName(formData.originCountry)}</p>
+                <p>• Destination: {getCountryName(formData.arrivalCountry) || "United States"}</p>
+                <p>• Shipment Value: ${Number.parseFloat(formData.itemValue).toLocaleString()}</p>
+                <p>• Shipment Quantity: {formData.itemQuantity}</p>
                 <p>• Transport: {getTransportLabel(formData.modeOfTransport)}</p>
               </div>
             </div>
