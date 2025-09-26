@@ -58,15 +58,15 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                  <Avatar className="h-16 w-16">
+                  <Avatar className="h-16 w-16 ring-0 border-0">
                     <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
-                    <AvatarFallback className="text-lg">
+                    <AvatarFallback className="text-lg bg-muted text-muted-foreground">
                       {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="text-center sm:text-left">
-                    <h3 className="font-semibold text-lg">{user.username || 'User'}</h3>
-                    <Badge variant="secondary">Standard</Badge>
+                    <h3 className="font-semibold text-lg text-foreground">{user.username || 'User'}</h3>
+                    <Badge variant="secondary" className="mt-1">Standard</Badge>
                   </div>
                 </div>
                 <Separator />
@@ -98,7 +98,7 @@ export default function AccountPage() {
                     <Shield className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Account Status</p>
-                      <Badge variant="outline" className="text-green-600 border-green-600">
+                      <Badge variant="outline" className="text-green-600 dark:text-green-400 border-green-600 dark:border-green-400">
                         Active
                       </Badge>
                     </div>
