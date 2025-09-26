@@ -66,7 +66,7 @@ export default function AccountPage() {
                   </Avatar>
                   <div className="text-center sm:text-left">
                     <h3 className="font-semibold text-lg">{user.username || 'User'}</h3>
-                    <Badge variant="secondary">Standard Member</Badge>
+                    <Badge variant="secondary">Standard</Badge>
                   </div>
                 </div>
                 <Separator />
