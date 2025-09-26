@@ -9,6 +9,9 @@ public class DashboardDataResponse {
     private Map<String, Integer> productCounts;
     private List<TariffHeatmapData> heatmapData;
     private List<TopImportingCountry> topImportingCountries;
+    private List<TradeAgreementInsight> tradeAgreementInsights;
+    private List<ProductCategoryInsight> productCategoryInsights;
+    private List<TariffTrendInsight> tariffTrendInsights;
 
     public DashboardDataResponse() {}
 
@@ -16,12 +19,18 @@ public class DashboardDataResponse {
                                 Map<String, Double> averageRates,
                                 Map<String, Integer> productCounts,
                                 List<TariffHeatmapData> heatmapData,
-                                List<TopImportingCountry> topImportingCountries) {
+                                List<TopImportingCountry> topImportingCountries,
+                                List<TradeAgreementInsight> tradeAgreementInsights,
+                                List<ProductCategoryInsight> productCategoryInsights,
+                                List<TariffTrendInsight> tariffTrendInsights) {
         this.countryData = countryData;
         this.averageRates = averageRates;
         this.productCounts = productCounts;
         this.heatmapData = heatmapData;
         this.topImportingCountries = topImportingCountries;
+        this.tradeAgreementInsights = tradeAgreementInsights;
+        this.productCategoryInsights = productCategoryInsights;
+        this.tariffTrendInsights = tariffTrendInsights;
     }
 
     // Getters and setters
@@ -74,12 +83,18 @@ public class DashboardDataResponse {
         private Integer totalProducts;
         private Double maxRate;
         private Double minRate;
+        private Integer freeTradeProducts;
+        private Integer highTariffProducts;
+        private Double tradeAgreementCoverage;
+        private String topProductCategory;
 
         public CountryTariffData() {}
 
         public CountryTariffData(String countryCode, String countryName, Double averageMfnRate, 
                                Double averageAdValRate, Double averageSpecificRate, 
-                               Integer totalProducts, Double maxRate, Double minRate) {
+                               Integer totalProducts, Double maxRate, Double minRate,
+                               Integer freeTradeProducts, Integer highTariffProducts,
+                               Double tradeAgreementCoverage, String topProductCategory) {
             this.countryCode = countryCode;
             this.countryName = countryName;
             this.averageMfnRate = averageMfnRate;
@@ -88,6 +103,10 @@ public class DashboardDataResponse {
             this.totalProducts = totalProducts;
             this.maxRate = maxRate;
             this.minRate = minRate;
+            this.freeTradeProducts = freeTradeProducts;
+            this.highTariffProducts = highTariffProducts;
+            this.tradeAgreementCoverage = tradeAgreementCoverage;
+            this.topProductCategory = topProductCategory;
         }
 
         // Getters and setters
@@ -114,6 +133,18 @@ public class DashboardDataResponse {
         
         public Double getMinRate() { return minRate; }
         public void setMinRate(Double minRate) { this.minRate = minRate; }
+        
+        public Integer getFreeTradeProducts() { return freeTradeProducts; }
+        public void setFreeTradeProducts(Integer freeTradeProducts) { this.freeTradeProducts = freeTradeProducts; }
+        
+        public Integer getHighTariffProducts() { return highTariffProducts; }
+        public void setHighTariffProducts(Integer highTariffProducts) { this.highTariffProducts = highTariffProducts; }
+        
+        public Double getTradeAgreementCoverage() { return tradeAgreementCoverage; }
+        public void setTradeAgreementCoverage(Double tradeAgreementCoverage) { this.tradeAgreementCoverage = tradeAgreementCoverage; }
+        
+        public String getTopProductCategory() { return topProductCategory; }
+        public void setTopProductCategory(String topProductCategory) { this.topProductCategory = topProductCategory; }
     }
 
     public static class TariffHeatmapData {
@@ -185,4 +216,129 @@ public class DashboardDataResponse {
         public String getPrimaryImportCategory() { return primaryImportCategory; }
         public void setPrimaryImportCategory(String primaryImportCategory) { this.primaryImportCategory = primaryImportCategory; }
     }
+
+    public static class TradeAgreementInsight {
+        private String agreementName;
+        private String country1;
+        private String country2;
+        private Integer productsCovered;
+        private Double averageRateReduction;
+        private Double tradeVolumeImpact;
+
+        public TradeAgreementInsight() {}
+
+        public TradeAgreementInsight(String agreementName, String country1, String country2, 
+                                   Integer productsCovered, Double averageRateReduction, Double tradeVolumeImpact) {
+            this.agreementName = agreementName;
+            this.country1 = country1;
+            this.country2 = country2;
+            this.productsCovered = productsCovered;
+            this.averageRateReduction = averageRateReduction;
+            this.tradeVolumeImpact = tradeVolumeImpact;
+        }
+
+        // Getters and setters
+        public String getAgreementName() { return agreementName; }
+        public void setAgreementName(String agreementName) { this.agreementName = agreementName; }
+        
+        public String getCountry1() { return country1; }
+        public void setCountry1(String country1) { this.country1 = country1; }
+        
+        public String getCountry2() { return country2; }
+        public void setCountry2(String country2) { this.country2 = country2; }
+        
+        public Integer getProductsCovered() { return productsCovered; }
+        public void setProductsCovered(Integer productsCovered) { this.productsCovered = productsCovered; }
+        
+        public Double getAverageRateReduction() { return averageRateReduction; }
+        public void setAverageRateReduction(Double averageRateReduction) { this.averageRateReduction = averageRateReduction; }
+        
+        public Double getTradeVolumeImpact() { return tradeVolumeImpact; }
+        public void setTradeVolumeImpact(Double tradeVolumeImpact) { this.tradeVolumeImpact = tradeVolumeImpact; }
+    }
+
+    public static class ProductCategoryInsight {
+        private String category;
+        private String country;
+        private Integer productCount;
+        private Double averageRate;
+        private Double rateRange;
+        private String topHtsCode;
+
+        public ProductCategoryInsight() {}
+
+        public ProductCategoryInsight(String category, String country, Integer productCount, 
+                                    Double averageRate, Double rateRange, String topHtsCode) {
+            this.category = category;
+            this.country = country;
+            this.productCount = productCount;
+            this.averageRate = averageRate;
+            this.rateRange = rateRange;
+            this.topHtsCode = topHtsCode;
+        }
+
+        // Getters and setters
+        public String getCategory() { return category; }
+        public void setCategory(String category) { this.category = category; }
+        
+        public String getCountry() { return country; }
+        public void setCountry(String country) { this.country = country; }
+        
+        public Integer getProductCount() { return productCount; }
+        public void setProductCount(Integer productCount) { this.productCount = productCount; }
+        
+        public Double getAverageRate() { return averageRate; }
+        public void setAverageRate(Double averageRate) { this.averageRate = averageRate; }
+        
+        public Double getRateRange() { return rateRange; }
+        public void setRateRange(Double rateRange) { this.rateRange = rateRange; }
+        
+        public String getTopHtsCode() { return topHtsCode; }
+        public void setTopHtsCode(String topHtsCode) { this.topHtsCode = topHtsCode; }
+    }
+
+    public static class TariffTrendInsight {
+        private String country;
+        private String trend;
+        private Double changePercentage;
+        private String description;
+        private String recommendation;
+
+        public TariffTrendInsight() {}
+
+        public TariffTrendInsight(String country, String trend, Double changePercentage, 
+                                String description, String recommendation) {
+            this.country = country;
+            this.trend = trend;
+            this.changePercentage = changePercentage;
+            this.description = description;
+            this.recommendation = recommendation;
+        }
+
+        // Getters and setters
+        public String getCountry() { return country; }
+        public void setCountry(String country) { this.country = country; }
+        
+        public String getTrend() { return trend; }
+        public void setTrend(String trend) { this.trend = trend; }
+        
+        public Double getChangePercentage() { return changePercentage; }
+        public void setChangePercentage(Double changePercentage) { this.changePercentage = changePercentage; }
+        
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        
+        public String getRecommendation() { return recommendation; }
+        public void setRecommendation(String recommendation) { this.recommendation = recommendation; }
+    }
+
+    // Getters and setters for new fields
+    public List<TradeAgreementInsight> getTradeAgreementInsights() { return tradeAgreementInsights; }
+    public void setTradeAgreementInsights(List<TradeAgreementInsight> tradeAgreementInsights) { this.tradeAgreementInsights = tradeAgreementInsights; }
+    
+    public List<ProductCategoryInsight> getProductCategoryInsights() { return productCategoryInsights; }
+    public void setProductCategoryInsights(List<ProductCategoryInsight> productCategoryInsights) { this.productCategoryInsights = productCategoryInsights; }
+    
+    public List<TariffTrendInsight> getTariffTrendInsights() { return tariffTrendInsights; }
+    public void setTariffTrendInsights(List<TariffTrendInsight> tariffTrendInsights) { this.tariffTrendInsights = tariffTrendInsights; }
 }
