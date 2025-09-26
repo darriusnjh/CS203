@@ -229,3 +229,5 @@ export function TariffStatistics({ countryData, totalCountries }: TariffStatisti
     </div>
   )
 }
+
+export default TariffStatistics

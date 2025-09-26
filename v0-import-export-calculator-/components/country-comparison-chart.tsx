@@ -268,3 +268,5 @@ export function CountryComparisonChart({ data }: CountryComparisonChartProps) {
     </div>
   )
 }
+
+export default CountryComparisonChart

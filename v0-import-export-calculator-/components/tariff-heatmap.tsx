@@ -350,3 +350,5 @@ export function TariffHeatmap({ data, selectedCountry }: TariffHeatmapProps) {
     </div>
   )
 }
+
+export default TariffHeatmap

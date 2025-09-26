@@ -183,3 +183,5 @@ export function TopImportingCountries({ countries }: TopImportingCountriesProps)
     </Card>
   )
 }
+
+export default TopImportingCountries
