@@ -89,12 +89,16 @@ export default function DashboardPage() {
         ? `http://localhost:8080/api/dashboard/data/${countryCode}`
         : "http://localhost:8080/api/dashboard/data"
       
+      console.log("Fetching dashboard data from:", url)
       const response = await fetch(url)
+      console.log("Response status:", response.status)
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       
       const data = await response.json()
+      console.log("Dashboard data received:", data)
       setDashboardData(data)
     } catch (err) {
       console.error("Error fetching dashboard data:", err)
