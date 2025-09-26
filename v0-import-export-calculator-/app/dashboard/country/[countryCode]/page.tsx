@@ -85,15 +85,20 @@ export default function CountryDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
 
-  const fetchCountryData = async (code: string) => {
+  const fetchCountryData = async (code: string, category?: string) => {
     try {
       setLoading(true)
       setError(null)
       
-      console.log(`Fetching country data for: ${code}`)
+      console.log(`Fetching country data for: ${code}, category: ${category || 'all'}`)
+      
+      // Build URL with category parameter if specified
+      const dashboardUrl = category && category !== 'all' 
+        ? `http://localhost:8080/api/dashboard/data/${code}?category=${encodeURIComponent(category)}`
+        : `http://localhost:8080/api/dashboard/data/${code}`
       
       // Fetch dashboard data
-      const dashboardResponse = await fetch(`http://localhost:8080/api/dashboard/data/${code}`)
+      const dashboardResponse = await fetch(dashboardUrl)
       console.log(`Dashboard response status: ${dashboardResponse.status}`)
       
       if (!dashboardResponse.ok) {
@@ -131,9 +136,9 @@ export default function CountryDashboard() {
 
   useEffect(() => {
     if (countryCode) {
-      fetchCountryData(countryCode)
+      fetchCountryData(countryCode, selectedCategory)
     }
-  }, [countryCode])
+  }, [countryCode, selectedCategory])
 
   const handleCountryChange = (newCountryCode: string) => {
     setCountryCode(newCountryCode)
@@ -183,9 +188,7 @@ export default function CountryDashboard() {
     ? importData 
     : importData.filter(item => item.primaryImportCategory === selectedCategory)
   
-  const filteredHeatmapData = selectedCategory === "all"
-    ? heatmapData
-    : heatmapData // Heatmap doesn't have categories, so show all
+  const filteredHeatmapData = heatmapData // Heatmap data is now filtered by category on the backend
 
   return (
     <div className="min-h-screen flex flex-col">

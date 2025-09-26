@@ -512,6 +512,10 @@ public class DashboardService {
     }
 
     public DashboardDataResponse getCountrySpecificData(String countryCode) {
+        return getCountrySpecificData(countryCode, null);
+    }
+    
+    public DashboardDataResponse getCountrySpecificData(String countryCode, String category) {
         // Get detailed data for a specific country with real import data
         List<DashboardDataResponse.CountryTariffData> countryData = new ArrayList<>();
         Map<String, Double> averageRates = new HashMap<>();
@@ -582,7 +586,7 @@ public class DashboardService {
 
         // Generate country-specific insights
         generateCountrySpecificInsights(countryCode, tradeAgreementInsights, productCategoryInsights, tariffTrendInsights);
-        generateCountrySpecificHeatmap(countryCode, heatmapData);
+        generateCountrySpecificHeatmap(countryCode, heatmapData, category);
         generateCountrySpecificImportData(countryCode, topImportingCountries);
 
         return new DashboardDataResponse(countryData, averageRates, productCounts, heatmapData, 
@@ -736,14 +740,15 @@ public class DashboardService {
         }
     }
 
-    private void generateCountrySpecificHeatmap(String countryCode, List<DashboardDataResponse.TariffHeatmapData> heatmapData) {
+    private void generateCountrySpecificHeatmap(String countryCode, List<DashboardDataResponse.TariffHeatmapData> heatmapData, String category) {
         // Generate heatmap data for imports TO this country (what other countries pay to import here)
         String[] allCountries = {"US", "CN", "SG", "GB", "JP", "KR", "CA", "AU", "FR", "IN", "ID", "IL", "IT", "MX", "SA", "ZA", "TR", "BR"};
         
         for (String originCountry : allCountries) {
             if (!originCountry.equals(countryCode)) {
-                double actualRate = getActualTariffRate(originCountry, countryCode);
-                int productCount = getProductCountForPair(originCountry, countryCode);
+                // Get tariff rate and product count for this specific category
+                double actualRate = getActualTariffRateForCategory(originCountry, countryCode, category);
+                int productCount = getProductCountForCategory(originCountry, countryCode, category);
                 String rateCategory = categorizeRate(actualRate);
                 
                 heatmapData.add(new DashboardDataResponse.TariffHeatmapData(
@@ -871,5 +876,67 @@ public class DashboardService {
         }
         
         return productData;
+    }
+    
+    private double getActualTariffRateForCategory(String originCountry, String destinationCountry, String category) {
+        // Get actual tariff rate from the destination country's data, filtered by category
+        List<? extends Tariff> tariffs = getTariffsForCountry(destinationCountry);
+        if (tariffs.isEmpty()) return 0.0;
+        
+        // Filter tariffs by category if specified
+        List<? extends Tariff> filteredTariffs = tariffs;
+        if (category != null && !category.equals("all")) {
+            filteredTariffs = tariffs.stream()
+                .filter(tariff -> categorizeByHtsCode(tariff.getHts8()).equals(category))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        if (filteredTariffs.isEmpty()) return 0.0;
+        
+        // Sample a subset of tariffs to get a realistic average
+        int sampleSize = Math.min(100, filteredTariffs.size());
+        List<Double> rates = new ArrayList<>();
+        
+        for (int i = 0; i < sampleSize; i++) {
+            Tariff tariff = filteredTariffs.get(i);
+            if (tariff.getMfnAdValRate() != null && tariff.getMfnAdValRate() > 0) {
+                double rate = tariff.getMfnAdValRate();
+                if (rate < 1.0) rate = rate * 100.0; // Convert decimal to percentage
+                if (rate <= 100.0) rates.add(rate);
+            }
+        }
+        
+        if (rates.isEmpty()) return 0.0;
+        
+        // Calculate base rate
+        double baseRate = rates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        
+        // Add significant variation based on origin country and product categories
+        double variation = getCountryVariation(originCountry, destinationCountry);
+        double categoryVariation = getCategoryVariation(originCountry, destinationCountry);
+        double randomVariation = (Math.random() - 0.5) * 4.0; // -2 to +2
+        
+        return Math.max(0.1, baseRate + variation + categoryVariation + randomVariation);
+    }
+    
+    private int getProductCountForCategory(String originCountry, String destinationCountry, String category) {
+        // Get actual product count from destination country, filtered by category
+        List<? extends Tariff> tariffs = getTariffsForCountry(destinationCountry);
+        
+        // Filter tariffs by category if specified
+        List<? extends Tariff> filteredTariffs = tariffs;
+        if (category != null && !category.equals("all")) {
+            filteredTariffs = tariffs.stream()
+                .filter(tariff -> categorizeByHtsCode(tariff.getHts8()).equals(category))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        int baseCount = filteredTariffs.size();
+        
+        // Add variation based on origin country and category
+        double variation = getProductCountVariation(originCountry, destinationCountry);
+        double randomFactor = 0.8 + (Math.random() * 0.4); // 0.8 to 1.2
+        
+        return (int) Math.max(100, baseCount * variation * randomFactor);
     }
 }

@@ -28,9 +28,11 @@ public class DashboardController {
     }
 
     @GetMapping("/data/{countryCode}")
-    public ResponseEntity<DashboardDataResponse> getCountrySpecificData(@PathVariable String countryCode) {
+    public ResponseEntity<DashboardDataResponse> getCountrySpecificData(
+            @PathVariable String countryCode,
+            @RequestParam(required = false) String category) {
         try {
-            DashboardDataResponse data = dashboardService.getCountrySpecificData(countryCode);
+            DashboardDataResponse data = dashboardService.getCountrySpecificData(countryCode, category);
             return ResponseEntity.ok(data);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
