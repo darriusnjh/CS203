@@ -76,7 +76,22 @@ export default function AccountPage() {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Member Since</p>
-                      <p className="text-sm text-muted-foreground">January 2024</p>
+                      <p className="text-sm text-muted-foreground">
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        }) : 'Unknown'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm font-medium">User ID</p>
+                      <p className="text-sm text-muted-foreground font-mono">
+                        {user.user_id ? user.user_id.slice(0, 8) + '...' : 'Unknown'}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
