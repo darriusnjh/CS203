@@ -45,7 +45,7 @@ export function UserMenu() {
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56" align="end" forceMount sideOffset={5}>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.username || 'User'}</p>
@@ -55,16 +55,16 @@ export function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleAccountClick}>
+        <DropdownMenuItem onClick={handleAccountClick} onSelect={(e) => e.preventDefault()}>
           <User className="mr-2 h-4 w-4" />
           <span>Account</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSettingsClick}>
+        <DropdownMenuItem onClick={handleSettingsClick} onSelect={(e) => e.preventDefault()}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={handleLogout} onSelect={(e) => e.preventDefault()}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
