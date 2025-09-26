@@ -100,8 +100,8 @@ public class DashboardService {
         // Generate heatmap data
         generateHeatmapData(countryData, heatmapData);
 
-        // Generate top importing countries (mock data for now)
-        generateTopImportingCountries(topImportingCountries);
+        // Generate top importing countries based on real data
+        generateTopImportingCountries(topImportingCountries, countryData);
 
         return new DashboardDataResponse(countryData, averageRates, productCounts, heatmapData, topImportingCountries);
     }
@@ -112,36 +112,54 @@ public class DashboardService {
                                   Map<String, Integer> productCounts) {
         if (tariffs.isEmpty()) return;
 
-        List<Double> mfnRates = new ArrayList<>();
-        List<Double> adValRates = new ArrayList<>();
-        List<Double> specificRates = new ArrayList<>();
+        List<Double> mfnAdValRates = new ArrayList<>();
+        List<Double> mfnSpecificRates = new ArrayList<>();
+        List<Double> mfnOtherRates = new ArrayList<>();
         List<Double> allRates = new ArrayList<>();
 
         for (Tariff tariff : tariffs) {
-            if (tariff.getMfnAdValRate() != null) {
-                mfnRates.add(tariff.getMfnAdValRate());
+            // Collect MFN Ad Valorem rates (filter out unrealistic values)
+            if (tariff.getMfnAdValRate() != null && tariff.getMfnAdValRate() > 0 && tariff.getMfnAdValRate() <= 100) {
+                mfnAdValRates.add(tariff.getMfnAdValRate());
                 allRates.add(tariff.getMfnAdValRate());
             }
-            if (tariff.getMfnSpecificRate() != null) {
-                specificRates.add(tariff.getMfnSpecificRate());
+            
+            // Collect MFN Specific rates (filter out unrealistic values)
+            if (tariff.getMfnSpecificRate() != null && tariff.getMfnSpecificRate() > 0 && tariff.getMfnSpecificRate() <= 1000) {
+                mfnSpecificRates.add(tariff.getMfnSpecificRate());
                 allRates.add(tariff.getMfnSpecificRate());
             }
-            if (tariff.getMfnOtherRate() != null) {
+            
+            // Collect MFN Other rates (filter out unrealistic values)
+            if (tariff.getMfnOtherRate() != null && tariff.getMfnOtherRate() > 0 && tariff.getMfnOtherRate() <= 100) {
+                mfnOtherRates.add(tariff.getMfnOtherRate());
                 allRates.add(tariff.getMfnOtherRate());
             }
         }
 
         if (!allRates.isEmpty()) {
-            double avgMfn = mfnRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double avgAdVal = adValRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double avgSpecific = specificRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            // Calculate averages from actual data
+            double avgMfnAdVal = mfnAdValRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            double avgMfnSpecific = mfnSpecificRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            double avgMfnOther = mfnOtherRates.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            
+            // Overall average rate - prioritize ad valorem rates for more realistic values
+            double avgMfn;
+            if (!mfnAdValRates.isEmpty()) {
+                avgMfn = avgMfnAdVal; // Use ad valorem rates as primary
+            } else if (!mfnSpecificRates.isEmpty()) {
+                avgMfn = Math.min(avgMfnSpecific / 100.0, 50.0); // Convert specific rates to percentage
+            } else {
+                avgMfn = avgMfnOther;
+            }
+            
             double maxRate = allRates.stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
             double minRate = allRates.stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
 
             String countryName = countryNames.getOrDefault(countryCode, countryCode);
             
             DashboardDataResponse.CountryTariffData data = new DashboardDataResponse.CountryTariffData(
-                countryCode, countryName, avgMfn, avgAdVal, avgSpecific, 
+                countryCode, countryName, avgMfn, avgMfnAdVal, avgMfnSpecific, 
                 tariffs.size(), maxRate, minRate
             );
             
@@ -153,15 +171,21 @@ public class DashboardService {
 
     private void generateHeatmapData(List<DashboardDataResponse.CountryTariffData> countryData,
                                    List<DashboardDataResponse.TariffHeatmapData> heatmapData) {
-        // String[] originCountries = {"US", "CN", "JP", "DE", "GB", "FR", "IT", "CA", "AU", "BR", "IN", "KR", "MX", "SG", "ZA"};
-        
+        // Generate heatmap data based on actual tariff rates from database
         for (DashboardDataResponse.CountryTariffData origin : countryData) {
             for (DashboardDataResponse.CountryTariffData destination : countryData) {
                 if (!origin.getCountryCode().equals(destination.getCountryCode())) {
-                    // Simulate tariff rates based on trade relationships
+                    // Use actual tariff rates from destination country
                     double baseRate = destination.getAverageMfnRate();
+                    
+                    // Apply trade relationship multipliers for special rates
                     double relationshipMultiplier = getRelationshipMultiplier(origin.getCountryCode(), destination.getCountryCode());
                     double finalRate = baseRate * relationshipMultiplier;
+                    
+                    // Ensure rate is reasonable (not too high)
+                    if (finalRate > 100) {
+                        finalRate = Math.min(finalRate, 50.0); // Cap at 50%
+                    }
                     
                     String rateCategory = categorizeRate(finalRate);
                     
@@ -209,32 +233,43 @@ public class DashboardService {
         if (rate <= 2.0) return "Very Low";
         if (rate <= 5.0) return "Low";
         if (rate <= 10.0) return "Medium";
-        if (rate <= 15.0) return "High";
+        if (rate <= 20.0) return "High";
         return "Very High";
     }
 
-    private void generateTopImportingCountries(List<DashboardDataResponse.TopImportingCountry> topImportingCountries) {
-        // Mock data for top importing countries
-        String[][] mockData = {
-            {"US", "United States", "1500000", "3.2", "Electronics"},
-            {"CN", "China", "1200000", "8.7", "Manufacturing"},
-            {"DE", "Germany", "950000", "6.1", "Automotive"},
-            {"JP", "Japan", "800000", "4.3", "Technology"},
-            {"GB", "United Kingdom", "750000", "5.2", "Financial Services"},
-            {"FR", "France", "700000", "5.8", "Luxury Goods"},
-            {"IT", "Italy", "650000", "6.4", "Fashion"},
-            {"CA", "Canada", "600000", "2.8", "Natural Resources"},
-            {"AU", "Australia", "550000", "3.9", "Mining"},
-            {"BR", "Brazil", "500000", "9.8", "Agriculture"}
-        };
+    private void generateTopImportingCountries(List<DashboardDataResponse.TopImportingCountry> topImportingCountries, 
+                                             List<DashboardDataResponse.CountryTariffData> countryData) {
+        // Generate top importing countries based on actual data from countryData
+        // Sort countries by total products and take top 10
+        List<DashboardDataResponse.CountryTariffData> sortedCountries = countryData.stream()
+            .sorted((a, b) -> Integer.compare(b.getTotalProducts(), a.getTotalProducts()))
+            .limit(10)
+            .collect(Collectors.toList());
 
-        for (String[] data : mockData) {
-            DashboardDataResponse.TopImportingCountry country = new DashboardDataResponse.TopImportingCountry(
-                data[0], data[1], Long.valueOf(data[2]), 
-                Double.valueOf(data[3]), data[4]
+        for (DashboardDataResponse.CountryTariffData country : sortedCountries) {
+            // Determine primary import category based on average tariff rate
+            String category = determineImportCategory(country.getAverageMfnRate());
+            
+            // Estimate import volume based on product count and average rate
+            long estimatedImports = (long) (country.getTotalProducts() * 1000 * (1.0 / (1.0 + country.getAverageMfnRate() / 100.0)));
+            
+            DashboardDataResponse.TopImportingCountry topCountry = new DashboardDataResponse.TopImportingCountry(
+                country.getCountryCode(),
+                country.getCountryName(),
+                estimatedImports,
+                country.getAverageMfnRate(),
+                category
             );
-            topImportingCountries.add(country);
+            topImportingCountries.add(topCountry);
         }
+    }
+
+    private String determineImportCategory(double averageRate) {
+        if (averageRate <= 3) return "Electronics";
+        if (averageRate <= 6) return "Technology";
+        if (averageRate <= 10) return "Manufacturing";
+        if (averageRate <= 15) return "Automotive";
+        return "Agriculture";
     }
 
     public DashboardDataResponse getCountrySpecificData(String countryCode) {
@@ -305,7 +340,7 @@ public class DashboardService {
 
         // Generate heatmap data for this specific country
         generateHeatmapData(countryData, heatmapData);
-        generateTopImportingCountries(topImportingCountries);
+        generateTopImportingCountries(topImportingCountries, countryData);
 
         return new DashboardDataResponse(countryData, averageRates, productCounts, heatmapData, topImportingCountries);
     }
