@@ -8,18 +8,17 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/components/auth-context'
-import { UserPlus, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { LogIn, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
-export default function SignupPage() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { signup } = useAuth()
+  const { login } = useAuth()
   const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,14 +37,11 @@ export default function SignupPage() {
       return false
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long')
+    if (!formData.password.trim()) {
+      setError('Password is required')
       return false
     }
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      return false
-    }
+
     return true
   }
 
@@ -58,15 +54,15 @@ export default function SignupPage() {
 
     setIsLoading(true)
     try {
-      const result = await signup(formData.username, formData.password)
+      const success = await login(formData.username, formData.password)
 
-      if (result.success) {
-        setSuccess(result.message)
+      if (success) {
+        setSuccess('Login successful! Redirecting...')
         setTimeout(() => {
           router.push('/')
-        }, 2000)
+        }, 1500)
       } else {
-        setError(result.message)
+        setError('Invalid username or password')
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.')
@@ -85,23 +81,23 @@ export default function SignupPage() {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-primary/10 rounded-full">
-                <UserPlus className="h-8 w-8 text-primary" />
+                <LogIn className="h-8 w-8 text-primary" />
               </div>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Create Your Account
+              Welcome Back
             </h1>
             <p className="text-muted-foreground text-lg">
-              Join TariffCalc Pro and start calculating import costs with precision
+              Sign in to your TariffCalc Pro account
             </p>
           </div>
 
-          {/* Signup Form */}
+          {/* Login Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Sign Up</CardTitle>
+              <CardTitle>Sign In</CardTitle>
               <CardDescription>
-                Fill in your details to create your account
+                Enter your credentials to access your account
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -119,32 +115,14 @@ export default function SignupPage() {
                   />
                 </div>
 
-
-
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
                     name="password"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder="Enter your password"
                     value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Password must be at least 6 characters long
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
                     onChange={handleInputChange}
                     required
                   />
@@ -174,52 +152,39 @@ export default function SignupPage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Account...
+                      Signing in...
                     </>
                   ) : (
                     <>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Create Account
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Sign In
                     </>
                   )}
                 </Button>
               </form>
 
-              {/* Login Link */}
+              {/* Signup Link */}
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Already have an account?{' '}
+                  Don't have an account?{' '}
                   <Button
                     variant="link"
                     className="p-0 h-auto text-primary"
-                    onClick={() => router.push('/login')}
+                    onClick={() => router.push('/signup')}
                   >
-                    Sign in here
+                    Create one here
                   </Button>
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          {/* Features */}
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <div className="text-center p-4 bg-muted/50 rounded-lg">
-              <h3 className="font-semibold mb-2">Accurate Calculations</h3>
-              <p className="text-sm text-muted-foreground">
-                Get precise tariff calculations for your imports
-              </p>
-            </div>
-            <div className="text-center p-4 bg-muted/50 rounded-lg">
-              <h3 className="font-semibold mb-2">Country Comparison</h3>
-              <p className="text-sm text-muted-foreground">
-                Compare tariff rates across different countries
-              </p>
-            </div>
-            <div className="text-center p-4 bg-muted/50 rounded-lg">
-              <h3 className="font-semibold mb-2">Expert Support</h3>
-              <p className="text-sm text-muted-foreground">
-                Access our community forum for help and insights
-              </p>
+          {/* Demo Credentials */}
+          <div className="mt-8 p-4 bg-muted/50 rounded-lg">
+            <h3 className="font-semibold mb-2 text-center">Demo Credentials</h3>
+            <div className="text-sm text-muted-foreground text-center space-y-1">
+              <p>Username: demo</p>
+              <p>Password: password</p>
             </div>
           </div>
         </div>

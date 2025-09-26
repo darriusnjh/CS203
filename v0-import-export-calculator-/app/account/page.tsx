@@ -59,13 +59,13 @@ export default function AccountPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src="/placeholder-user.jpg" alt={user.username} />
+                    <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
                     <AvatarFallback className="text-lg">
-                      {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-lg">{user.username}</h3>
+                    <h3 className="font-semibold text-lg">{user.username || 'User'}</h3>
                     <Badge variant="secondary">Premium Member</Badge>
                   </div>
                 </div>

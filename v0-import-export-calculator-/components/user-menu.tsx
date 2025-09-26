@@ -34,9 +34,9 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder-user.jpg" alt={user.username} />
+            <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
             <AvatarFallback>
-              {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
+              {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -44,7 +44,7 @@ export function UserMenu() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.username}</p>
+            <p className="text-sm font-medium leading-none">{user.username || 'User'}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {/* {user.email} */}
             </p>

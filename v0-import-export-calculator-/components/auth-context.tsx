@@ -10,7 +10,7 @@ interface User {
 interface AuthContextType {
   user: User | null
   login: (username: string, password: string) => Promise<boolean>
-  signup: (password: string, username: string) => Promise<{ success: boolean; message: string }>
+  signup: (username: string, password: string) => Promise<{ success: boolean; message: string }>
   logout: () => void
   changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message: string }>
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>
@@ -35,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
-      // Try to call the actual backend API first
       const response = await fetch('http://localhost:8080/api/user/login', {
         credentials: 'include',
         method: 'POST',
@@ -50,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.ok) {
         const data = await response.json()
-        console.log(data)
+        console.log('Login response:', data)
         if (data.message === "login succeeded" && data.user) {
           const userData: User = {
             id: data.user.user_id?.toString() || '1',
@@ -61,6 +60,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setIsLoading(false)
           return true
         }
+      } else if (response.status === 401) {
+        console.log('Login failed: Invalid credentials')
+        setIsLoading(false)
+        return false
+      } else if (response.status === 409) {
+        console.log('Login failed: User already logged in')
+        setIsLoading(false)
+        return false
+      } else {
+        console.error('Login failed with status:', response.status)
+        setIsLoading(false)
+        return false
       }
       setIsLoading(false)
       return false
@@ -89,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.ok) {
         const data = await response.json()
-        setIsLoading(false)
+        console.log('Signup response:', data)
         if (data.username === "Successful" && data.user) {
           const userData: User = {
             id: data.user.user_id?.toString() || '1',
@@ -103,12 +114,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             message: 'Signup successful!'
           }
         } else {
+          setIsLoading(false)
           return {
             success: false,
             message: data.username || 'Signup failed. Please try again.'
           }
         }
+      } else if (response.status === 401) {
+        const data = await response.json().catch(() => ({}))
+        setIsLoading(false)
+        return {
+          success: false,
+          message: data.username || 'Signup failed. User may already exist.'
+        }
+      } else if (response.status === 409) {
+        setIsLoading(false)
+        return {
+          success: false,
+          message: 'User already logged in. Please logout first.'
+        }
       } else {
+        console.error('Signup failed with status:', response.status)
         setIsLoading(false)
         return {
           success: false,
