@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from './auth-context'
 import { User, LogOut, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -35,22 +36,23 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div 
-          className="h-8 w-8 cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center bg-muted text-muted-foreground font-medium"
+        <Avatar 
+          className="h-8 w-8 cursor-pointer hover:opacity-80 transition-opacity"
           aria-label="User menu"
           role="button"
           tabIndex={0}
         >
-          {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
-        </div>
+          <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
+          <AvatarFallback className="bg-muted text-muted-foreground">
+            {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         className="w-56" 
         align="end" 
         sideOffset={8}
         onCloseAutoFocus={(e) => e.preventDefault()}
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
