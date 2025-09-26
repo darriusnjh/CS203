@@ -1,10 +1,13 @@
 package com.tariff.app.controller;
 
 import com.tariff.app.dto.DashboardDataResponse;
+import com.tariff.app.dto.ProductTariffData;
 import com.tariff.app.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -28,6 +31,16 @@ public class DashboardController {
     public ResponseEntity<DashboardDataResponse> getCountrySpecificData(@PathVariable String countryCode) {
         try {
             DashboardDataResponse data = dashboardService.getCountrySpecificData(countryCode);
+            return ResponseEntity.ok(data);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/products/{countryCode}")
+    public ResponseEntity<List<ProductTariffData>> getCountryProductTariffs(@PathVariable String countryCode) {
+        try {
+            List<ProductTariffData> data = dashboardService.getCountryProductTariffs(countryCode);
             return ResponseEntity.ok(data);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
