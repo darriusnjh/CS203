@@ -194,7 +194,7 @@ export function TariffStatistics({ countryData, totalCountries }: TariffStatisti
               <span className="font-medium">{highCount}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-red-600">Very High (>15%)</span>
+              <span className="text-red-600">Very High (&gt;15%)</span>
               <span className="font-medium">{veryHighCount}</span>
             </div>
           </div>

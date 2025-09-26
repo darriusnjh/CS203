@@ -243,7 +243,7 @@ export default function DashboardPage() {
                   <SelectItem value="all">All Rates</SelectItem>
                   <SelectItem value="low">Low (≤5%)</SelectItem>
                   <SelectItem value="medium">Medium (5-10%)</SelectItem>
-                  <SelectItem value="high">High (>10%)</SelectItem>
+                  <SelectItem value="high">High (&gt;10%)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

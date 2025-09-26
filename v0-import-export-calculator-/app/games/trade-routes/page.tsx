@@ -130,20 +130,25 @@ export default function TradeRoutesPage() {
       const newTotalProfit = newRoutes.reduce((sum, route) => sum + route.profit, 0)
       const newScore = newTotalProfit - newTotalCost
 
-      setGameState(prev => ({
-        ...prev,
-        routes: newRoutes,
-        totalCost: newTotalCost,
-        totalProfit: newTotalProfit,
-        score: newScore,
-        moves: prev.moves + 1,
-        selectedCountry: null
-      }))
+      setGameState(prev => {
+        const newMoves = prev.moves + 1;
+        const newState = {
+          ...prev,
+          routes: newRoutes,
+          totalCost: newTotalCost,
+          totalProfit: newTotalProfit,
+          score: newScore,
+          moves: newMoves,
+          selectedCountry: null
+        };
 
-      // Check if game should end
-      if (prev.moves + 1 >= prev.maxMoves) {
-        setGameCompleted(true)
-      }
+        // Check if game should end
+        if (newMoves >= prev.maxMoves) {
+          setGameCompleted(true);
+        }
+
+        return newState;
+      })
     } else {
       // Deselect same country
       setGameState(prev => ({ ...prev, selectedCountry: null }))
