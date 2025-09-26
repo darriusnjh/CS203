@@ -10,6 +10,8 @@ import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
 import com.tariff.app.dto.UserSignupRequest;
 import com.tariff.app.dto.UserSignupResponse;
+import com.tariff.app.dto.ChangePasswordRequest;
+import com.tariff.app.dto.ChangePasswordResponse;
 import com.tariff.app.entity.User;
 import com.tariff.app.repository.UserRepository;
 import com.tariff.app.mappers.UserMapper;
@@ -61,6 +63,32 @@ public class UserService {
             return new UserSignupResponse("Successful",
                     userMapper.toDto(user));
         }
+    }
+
+    public ChangePasswordResponse changePassword(String username, ChangePasswordRequest request) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            
+            // Verify current password
+            if (!user.verifyPassword(request.getCurrentPassword())) {
+                return new ChangePasswordResponse(false, "Current password is incorrect");
+            }
+            
+            // Validate new password (basic validation)
+            if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+                return new ChangePasswordResponse(false, "New password must be at least 6 characters long");
+            }
+            
+            // Update password
+            user.setHashPassword(request.getNewPassword());
+            user.setUpdatedAt(OffsetDateTime.now());
+            userRepository.save(user);
+            
+            return new ChangePasswordResponse(true, "Password changed successfully");
+        }
+        
+        return new ChangePasswordResponse(false, "User not found");
     }
 
 }

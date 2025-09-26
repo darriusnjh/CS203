@@ -10,6 +10,8 @@ import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
 import com.tariff.app.dto.UserSignupRequest;
 import com.tariff.app.dto.UserSignupResponse;
+import com.tariff.app.dto.ChangePasswordRequest;
+import com.tariff.app.dto.ChangePasswordResponse;
 import com.tariff.app.service.JwtService;
 import com.tariff.app.service.UserService;
 
@@ -101,6 +103,31 @@ public class UserController {
 
         }
         return ResponseEntity.status(401).body("Unauthorized");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ChangePasswordResponse> changePassword(
+            @CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
+            @RequestBody ChangePasswordRequest request) {
+        
+        // Check if user has valid JWT
+        if (cookieCheck.equals("")) {
+            return ResponseEntity.status(401).body(new ChangePasswordResponse(false, "Not authenticated"));
+        }
+        
+        Claims claim = JwtService.validateJwtandReturnClaim(cookieCheck);
+        if (claim == null) {
+            return ResponseEntity.status(401).body(new ChangePasswordResponse(false, "Invalid token"));
+        }
+        
+        String username = claim.getSubject();
+        ChangePasswordResponse response = userService.changePassword(username, request);
+        
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(400).body(response);
+        }
     }
 
 }

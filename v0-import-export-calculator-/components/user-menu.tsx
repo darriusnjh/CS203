@@ -23,6 +23,10 @@ export function UserMenu() {
     router.push('/account')
   }
 
+  const handleSettingsClick = () => {
+    router.push('/settings')
+  }
+
   const handleLogout = () => {
     logout()
   }
@@ -55,7 +59,7 @@ export function UserMenu() {
           <User className="mr-2 h-4 w-4" />
           <span>Account</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSettingsClick}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
