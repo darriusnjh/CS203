@@ -36,10 +36,10 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="relative h-8 w-8 rounded-full p-0 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 border-0 bg-transparent">
-          <Avatar className="h-8 w-8 ring-0 border-0">
-            <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
-            <AvatarFallback className="bg-muted text-muted-foreground">
+        <button className="relative h-8 w-8 p-0 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 border-0 bg-transparent rounded-none">
+          <Avatar className="h-8 w-8 ring-0 border-0 rounded-none">
+            <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} className="rounded-none" />
+            <AvatarFallback className="bg-muted text-muted-foreground rounded-none">
               {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
