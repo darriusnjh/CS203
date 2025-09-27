@@ -17,7 +17,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/')
+      router.push('/login')
     }
   }, [user, router])
 
@@ -27,24 +27,24 @@ export default function AccountPage() {
 
   const handleLogout = () => {
     logout()
-    router.push('/')
+    router.push('/login')
   }
 
   return (
     <div className="bg-background">
       <NavigationHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Page Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Account Settings</h1>
-            <p className="text-muted-foreground text-lg">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Account Settings</h1>
+            <p className="text-muted-foreground text-base sm:text-lg">
               Manage your account information and preferences
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Profile Information */}
             <Card>
               <CardHeader>
@@ -57,39 +57,48 @@ export default function AccountPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src="/placeholder-user.jpg" alt={user.name} />
-                    <AvatarFallback className="text-lg">
-                      {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                  <Avatar className="h-16 w-16 ring-0 border-0">
+                    <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
+                    <AvatarFallback className="text-lg bg-muted text-muted-foreground">
+                      {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <h3 className="font-semibold text-lg">{user.name}</h3>
-                    <Badge variant="secondary">Premium Member</Badge>
+                  <div className="text-center sm:text-left">
+                    <h3 className="font-semibold text-lg text-foreground">{user.username || 'User'}</h3>
+                    <Badge variant="secondary" className="mt-1">Standard</Badge>
                   </div>
                 </div>
                 <Separator />
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm font-medium">Email</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
-                    </div>
-                  </div>
+                  
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Member Since</p>
-                      <p className="text-sm text-muted-foreground">January 2024</p>
+                      <p className="text-sm text-muted-foreground">
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        }) : 'Unknown'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm font-medium">User ID</p>
+                      <p className="text-sm text-muted-foreground font-mono">
+                        {user.user_id ? user.user_id.slice(0, 8) + '...' : 'Unknown'}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Shield className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Account Status</p>
-                      <Badge variant="outline" className="text-green-600 border-green-600">
+                      <Badge variant="outline" className="text-green-600 dark:text-green-400 border-green-600 dark:border-green-400">
                         Active
                       </Badge>
                     </div>
@@ -108,17 +117,39 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => router.push('/settings')}
+                  >
+                    <User className="mr-2 h-4 w-4" />
                     Edit Profile
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => router.push('/settings')}
+                  >
+                    <Shield className="mr-2 h-4 w-4" />
                     Change Password
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    disabled
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
                     Notification Settings
+                    <Badge variant="secondary" className="ml-auto text-xs">Soon</Badge>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    disabled
+                  >
+                    <Shield className="mr-2 h-4 w-4" />
                     Privacy Settings
+                    <Badge variant="secondary" className="ml-auto text-xs">Soon</Badge>
                   </Button>
                 </div>
                 <Separator />
@@ -133,31 +164,57 @@ export default function AccountPage() {
               </CardContent>
             </Card>
 
-            {/* Usage Statistics */}
-            <Card className="md:col-span-2">
+            {/* Account Information */}
+            <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Usage Statistics</CardTitle>
+                <CardTitle>Account Information</CardTitle>
                 <CardDescription>
-                  Your tariff calculation history and usage
+                  Additional details about your account
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">127</p>
-                    <p className="text-sm text-muted-foreground">Calculations</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Last Updated</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          }) : 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Shield className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Account Type</p>
+                        <Badge variant="secondary">Standard</Badge>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">23</p>
-                    <p className="text-sm text-muted-foreground">Countries</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">$2.4M</p>
-                    <p className="text-sm text-muted-foreground">Total Value</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">15</p>
-                    <p className="text-sm text-muted-foreground">HTS Codes</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Username</p>
+                        <p className="text-sm text-muted-foreground font-mono">
+                          {user.username || 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Email</p>
+                        <p className="text-sm text-muted-foreground">
+                          Not provided
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>

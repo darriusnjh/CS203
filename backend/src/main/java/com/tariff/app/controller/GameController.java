@@ -14,7 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/games")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowCredentials = "true")
+
+
 public class GameController {
 
     @Autowired

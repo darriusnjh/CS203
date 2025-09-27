@@ -23,6 +23,10 @@ export function UserMenu() {
     router.push('/account')
   }
 
+  const handleSettingsClick = () => {
+    router.push('/settings')
+  }
+
   const handleLogout = () => {
     logout()
   }
@@ -32,35 +36,52 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder-user.jpg" alt={user.name} />
-            <AvatarFallback>
-              {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </Button>
+        <Avatar 
+          className="h-8 w-8 cursor-pointer hover:opacity-80 transition-opacity"
+          aria-label="User menu"
+          role="button"
+          tabIndex={0}
+        >
+          <AvatarImage src="/placeholder-user.jpg" alt={user.username || 'User'} />
+          <AvatarFallback className="bg-muted text-muted-foreground">
+            {user.username ? user.username.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent 
+        className="w-56" 
+        align="end" 
+        sideOffset={8}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-medium leading-none">{user.username || 'User'}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
+              {/* {user.email} */}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleAccountClick}>
+        <DropdownMenuItem 
+          onClick={handleAccountClick} 
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+        >
           <User className="mr-2 h-4 w-4" />
           <span>Account</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={handleSettingsClick} 
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+        >
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem 
+          onClick={handleLogout} 
+          className="cursor-pointer focus:bg-accent focus:text-accent-foreground text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

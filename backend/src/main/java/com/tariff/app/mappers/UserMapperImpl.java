@@ -21,6 +21,7 @@ public class UserMapperImpl implements UserMapper {
         userDto.setUpdatedAt(user.getUpdatedAt());
         userDto.setLastLogin(user.getLastLogin());
         
+        
         return userDto;
     }
 }
