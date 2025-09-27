@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+// Temporarily disabled for Swagger UI demo
+// @RestController
 @RequestMapping("/api/chat")
 public class AiController {
 

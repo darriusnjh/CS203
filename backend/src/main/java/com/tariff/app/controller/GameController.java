@@ -5,6 +5,14 @@ import com.tariff.app.dto.GameScoreResponse;
 import com.tariff.app.dto.LeaderboardResponse;
 import com.tariff.app.service.GameService;
 import com.tariff.app.service.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +22,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/games")
-// @CrossOrigin(origins = "*")
 @CrossOrigin(origins = "https://localhost:3000", allowCredentials = "true")
-
-
+@Tag(name = "Gaming System", description = "APIs for game scoring, leaderboards, and user statistics")
+@SecurityRequirement(name = "bearerAuth")
 public class GameController {
 
     @Autowired
     private GameService gameService;
 
+    @Operation(summary = "Save Game Score", description = "Save a game score for the authenticated user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Score saved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameScoreResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
     @PostMapping("/score")
     public ResponseEntity<GameScoreResponse> saveGameScore(
+            @Parameter(description = "Game score data")
             @Valid @RequestBody GameScoreRequest request,
+            @Parameter(description = "Bearer token for authentication")
             @RequestHeader("Authorization") String token) {
         
         String username = JwtService.extractUsername(token.substring(7));
@@ -63,8 +79,14 @@ public class GameController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get Global Leaderboard", description = "Get the global leaderboard with top players across all games")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Leaderboard retrieved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = LeaderboardResponse.class)))
+    })
     @GetMapping("/leaderboard")
     public ResponseEntity<List<LeaderboardResponse>> getGlobalLeaderboard(
+            @Parameter(description = "Number of top players to return", example = "10")
             @RequestParam(defaultValue = "10") int limit) {
         
         List<LeaderboardResponse> leaderboard = gameService.getGlobalLeaderboard(limit);
