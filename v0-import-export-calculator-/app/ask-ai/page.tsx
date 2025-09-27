@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react"
 import { NavigationHeader } from "@/components/navigation-header"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,9 +20,12 @@ interface Message {
   timestamp: Date
 }
 
+type ChatTurn = { role: "user" | "assistant"; content: string }
+
 export default function AskAIPage() {
   const { user } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
+  const [history, setHistory] = useState<ChatTurn[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -72,25 +77,48 @@ export default function AskAIPage() {
     }
 
     try {
-      // TODO: Replace with your actual AI backend API call
-      // const response = await fetch('/api/ai/chat', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ message: inputValue })
-      // })
-      // const data = await response.json()
+      // maintain running conversation history
+      const nextHistory: ChatTurn[] = [...history, { role: "user" as const, content: userMessage.content }]
+      setHistory(nextHistory)
 
-      // Simulate AI response for now
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      const res = await fetch("http://localhost:8080/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage.content, history: nextHistory })
+      })
+
+      const contentType = res.headers.get("content-type") || ""
+      let replyText = ""
+      if (contentType.includes("text/plain")) {
+        replyText = await res.text()
+      } else {
+        const data = await res.json()
+        // Prefer plain string or DTO first
+        if (typeof data === "string") {
+          replyText = data
+        } else if (data && typeof data === "object") {
+          // Responses API: take LAST assistant message.output_text
+          const msgs = Array.isArray(data.output)
+            ? data.output.filter((m: any) => m?.type === "message")
+            : []
+          const lastMsg = msgs.length ? msgs[msgs.length - 1] : null
+          const lastText = lastMsg && Array.isArray(lastMsg.content)
+            ? lastMsg.content.find((c: any) => c?.type === "output_text")?.text
+            : undefined
+          replyText = data.aiResponse ?? data.output_text ?? lastText ?? JSON.stringify(data)
+        }
+      }
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `I understand you're asking about: "${userMessage.content}". This is a simulated response. Please connect your AI backend to get real responses.`,
+        content: replyText || "",
         isUser: false,
         timestamp: new Date()
       }
 
       setMessages(prev => [...prev, aiMessage])
+      // append assistant reply to history
+      setHistory(prev => [...prev, { role: "assistant" as const, content: aiMessage.content }])
     } catch (error) {
       toast.error("Failed to get AI response")
       console.error("AI API error:", error)
@@ -111,6 +139,7 @@ export default function AskAIPage() {
 
   const startNewChat = () => {
     setMessages([])
+    setHistory([])
     toast.success("New chat started")
   }
 
@@ -179,7 +208,9 @@ export default function AskAIPage() {
                           : "bg-muted text-foreground"
                       }`}
                     >
-                      <p className="text-sm">{message.content}</p>
+                      <div className="text-sm break-words">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                      </div>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString()}
                       </p>

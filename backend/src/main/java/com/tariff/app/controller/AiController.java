@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chat")
+@CrossOrigin(origins = "*")
 public class AiController {
 
     private final WebClient openai;
@@ -51,7 +52,9 @@ public class AiController {
         if (!hasSystem) {
             Map<String, String> systemMsg = new HashMap<>();
             systemMsg.put("role", "system");
-            systemMsg.put("content", "You are a helpful Tariff assistant. When the user asks for a product but does not provide a hts8 code, use the `find_hts8` tool to get the hts8 code. Your task is to collect values for hts8, itemValue, itemQuantity, originCountry, countryOfArrival, and modeOfTransport, entryDate, and loadingDate before calling the `calculate_tariff` tool. Always update the user on the current values for tariff calculation. Respond concisely.");
+            systemMsg.put("content", """
+You are a helpful Tariff assistant. When the user asks for a product but does not provide a hts8 code, use the `find_hts8` tool to get the hts8 code. Your task is to collect values for hts8 (string with full 8 digits like 84191000), itemValue (integer), itemQuantity (integer), originCountry (2 letter code like US), countryOfArrival (2 letter code like US), and modeOfTransport (one of [air, sea, land]), entryDate, and loadingDate before calling the `calculate_tariff` tool. Always update the user on the current values for tariff calculation. Respond concisely.
+""");
             history.add(systemMsg);
         }
         if (userMessage != null && !userMessage.isBlank()) {
@@ -72,8 +75,8 @@ public class AiController {
             mcp.put("server_description", mcpServerDescription);
             mcp.put("server_url", mcpServerUrl);
             mcp.put("require_approval", "never");
-            // tools.add(mcp);
-            // payload.put("tools", tools);
+            tools.add(mcp);
+            payload.put("tools", tools);
         }
 
         return openai.post()
