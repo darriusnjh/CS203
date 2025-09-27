@@ -5,7 +5,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { LoginDialog } from "@/components/login-dialog"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/components/auth-context"
 import { Calculator, Globe, TrendingUp, Menu, X, Newspaper, MessageSquare, LogIn, UserPlus, ChevronDown, BookOpen, HelpCircle, FileText, Users, Mail, Shield, FileCheck, Gamepad2, Bot, BarChart3 } from "lucide-react"
@@ -232,7 +231,12 @@ export function NavigationHeader() {
               <UserMenu />
             ) : (
               <div className="flex items-center gap-2">
-                <LoginDialog />
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/login">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Login
+                  </Link>
+                </Button>
                 <Button variant="default" size="sm" asChild>
                   <Link href="/signup">
                     Sign Up
@@ -385,9 +389,11 @@ export function NavigationHeader() {
               {!user && (
                 <div className="pt-4 border-t">
                   <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-                      <LogIn className="h-4 w-4" />
-                      Login
+                    <Button variant="outline" size="sm" asChild className="w-full justify-start gap-2">
+                      <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        <LogIn className="h-4 w-4" />
+                        Login
+                      </Link>
                     </Button>
                     <Button variant="default" size="sm" asChild className="w-full justify-start gap-2">
                       <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>

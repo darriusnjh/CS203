@@ -4,14 +4,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 
 interface User {
   id: string
-  email: string
-  name: string
+  user_id: string
+  username: string
+  createdAt: string
+  updatedAt: string
+  lastLogin?: string
 }
 
 interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => Promise<boolean>
-  signup: (email: string, password: string, name: string) => Promise<{ success: boolean; message: string }>
+  login: (username: string, password: string) => Promise<boolean>
+  signup: (username: string, password: string) => Promise<{ success: boolean; message: string }>
   logout: () => void
   changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message: string }>
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>
@@ -33,51 +36,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
-      // Try to call the actual backend API first
-      const response = await fetch('http://localhost:8080/api/login/login', {
+      const response = await fetch('http://localhost:8080/api/user/login', {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: email,
+          username: username,
           password: password
         })
       })
 
       if (response.ok) {
         const data = await response.json()
+        console.log('Login response:', data)
         if (data.message === "login succeeded" && data.user) {
           const userData: User = {
-            id: data.user.id?.toString() || '1',
-            email: email,
-            name: data.user.username || email.split('@')[0]
+            id: data.user.user_id?.toString() || '1',
+            username: data.user.username
           }
           setUser(userData)
           localStorage.setItem('user', JSON.stringify(userData))
           setIsLoading(false)
           return true
         }
-      }
-
-      // Fallback to demo credentials if backend fails
-      if (email === 'demo@example.com' && password === 'password') {
-        const userData: User = {
-          id: '1',
-          email: email,
-          name: 'Demo User'
-        }
-        setUser(userData)
-        localStorage.setItem('user', JSON.stringify(userData))
+      } else if (response.status === 401) {
+        console.log('Login failed: Invalid credentials')
         setIsLoading(false)
-        return true
+        return false
+      } else if (response.status === 409) {
+        console.log('Login failed: User already logged in')
+        setIsLoading(false)
+        return false
       } else {
+        console.error('Login failed with status:', response.status)
         setIsLoading(false)
         return false
       }
+      setIsLoading(false)
+      return false
+
     } catch (error) {
       console.error('Login error:', error)
       setIsLoading(false)
@@ -85,35 +87,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; message: string }> => {
+  const signup = async (username: string, password: string): Promise<{ success: boolean; message: string }> => {
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:8080/api/login/signup', {
+      const response = await fetch('http://localhost:8080/api/user/signup', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: email,
+          username: username,
           password: password
         })
       })
 
       if (response.ok) {
         const data = await response.json()
-        setIsLoading(false)
+        console.log('Signup response:', data)
         if (data.username === "Successful" && data.user) {
+          const userData: User = {
+            id: data.user.user_id?.toString() || '1',
+            username: data.user.username
+          }
+          setUser(userData)
+          localStorage.setItem('user', JSON.stringify(userData))
+          setIsLoading(false)
           return {
             success: true,
-            message: 'Signup successful! You can now log in.'
+            message: 'Signup successful!'
           }
         } else {
+          setIsLoading(false)
           return {
             success: false,
             message: data.username || 'Signup failed. Please try again.'
           }
         }
+      } else if (response.status === 401) {
+        const data = await response.json().catch(() => ({}))
+        setIsLoading(false)
+        return {
+          success: false,
+          message: data.username || 'Signup failed. User may already exist.'
+        }
+      } else if (response.status === 409) {
+        setIsLoading(false)
+        return {
+          success: false,
+          message: 'User already logged in. Please logout first.'
+        }
       } else {
+        console.error('Signup failed with status:', response.status)
         setIsLoading(false)
         return {
           success: false,
@@ -135,7 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // Simulate API call - replace with actual password change logic
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       setIsLoading(false)
       return {
         success: true,
@@ -155,7 +180,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // Simulate API call - replace with actual forgot password logic
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       setIsLoading(false)
       return {
         success: true,
@@ -170,10 +195,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null)
     localStorage.removeItem('user')
+
+
+    try {
+      // Try to call the actual backend API first
+      const response = await fetch('http://localhost:8080/api/user/logout', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+      })
+
+
+      setIsLoading(false)
+      return false
+
+    } catch (error) {
+      console.error('Logout error:', error)
+      setIsLoading(false)
+      return false
+    }
+
   }
+
+
 
   return (
     <AuthContext.Provider value={{ user, login, signup, logout, changePassword, forgotPassword, isLoading }}>

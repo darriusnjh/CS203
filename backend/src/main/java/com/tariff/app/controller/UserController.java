@@ -10,20 +10,22 @@ import com.tariff.app.dto.UserLoginRequest;
 import com.tariff.app.dto.UserLoginResponse;
 import com.tariff.app.dto.UserSignupRequest;
 import com.tariff.app.dto.UserSignupResponse;
+import com.tariff.app.dto.ChangePasswordRequest;
+import com.tariff.app.dto.ChangePasswordResponse;
 import com.tariff.app.service.JwtService;
 import com.tariff.app.service.UserService;
 
 import io.jsonwebtoken.Claims;
 
 @RestController
-@RequestMapping("/api/login")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/user")
+// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    // TODO check if user is already logged in, if yes refuse api
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
             @RequestBody UserLoginRequest request) {
@@ -67,7 +69,6 @@ public class UserController {
 
     }
 
-    // TODO logout
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck) {
 
@@ -85,6 +86,48 @@ public class UserController {
         ResponseCookie cookie = JwtService.createEmptyCookie();
 
         return ResponseEntity.status(204).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> profile(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck) {
+
+        // Check if user has cookies
+        if (!cookieCheck.equals("")) {
+            Claims claim = JwtService.validateJwtandReturnClaim(cookieCheck);
+            if (claim != null) {
+                String username = claim.getSubject();
+
+                //TODO change return to something more useful
+                return ResponseEntity.ok( username);
+            }
+
+        }
+        return ResponseEntity.status(401).body("Unauthorized");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ChangePasswordResponse> changePassword(
+            @CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
+            @RequestBody ChangePasswordRequest request) {
+        System.err.println("cookie: " + cookieCheck);
+        // Check if user has valid JWT
+        if (cookieCheck.equals("")) {
+            return ResponseEntity.status(401).body(new ChangePasswordResponse(false, "Not authenticated"));
+        }
+        
+        Claims claim = JwtService.validateJwtandReturnClaim(cookieCheck);
+        if (claim == null) {
+            return ResponseEntity.status(401).body(new ChangePasswordResponse(false, "Invalid token"));
+        }
+        
+        String username = claim.getSubject();
+        ChangePasswordResponse response = userService.changePassword(username, request);
+        
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(400).body(response);
+        }
     }
 
 }

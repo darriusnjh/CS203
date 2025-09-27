@@ -19,6 +19,7 @@ import lombok.Setter;
 public class UserDto {
     @JsonProperty("user_id")
     private UUID id;
+    @JsonProperty("username")
     private String username;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private OffsetDateTime createdAt;
