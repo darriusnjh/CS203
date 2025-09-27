@@ -10,7 +10,7 @@ import { useAuth } from './auth-context'
 import { LogIn, Loader2, UserPlus, Key, Mail } from 'lucide-react'
 
 export function LoginDialog() {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -23,7 +23,7 @@ export function LoginDialog() {
   const { login, signup, changePassword, forgotPassword, isLoading } = useAuth()
 
   const resetForm = () => {
-    setEmail('')
+    setUsername('')
     setPassword('')
     setName('')
     setConfirmPassword('')
@@ -38,12 +38,12 @@ export function LoginDialog() {
     setError('')
     setSuccess('')
     
-    const success = await login(email, password)
+    const success = await login(username, password)
     if (success) {
       setIsOpen(false)
       resetForm()
     } else {
-      setError('Invalid email or password')
+      setError('Invalid username or password')
     }
   }
 
@@ -62,7 +62,7 @@ export function LoginDialog() {
       return
     }
 
-    const result = await signup(email, password, name)
+    const result = await signup(username, password)
     if (result.success) {
       setSuccess(result.message)
       setTimeout(() => {
@@ -80,7 +80,7 @@ export function LoginDialog() {
     setError('')
     setSuccess('')
 
-    const result = await forgotPassword(email)
+    const result = await forgotPassword(username)
     if (result.success) {
       setSuccess(result.message)
     } else {
@@ -151,13 +151,13 @@ export function LoginDialog() {
           <TabsContent value="login" className="space-y-4">
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="login-email">Email</Label>
+                <Label htmlFor="login-username">Username</Label>
                 <Input
-                  id="login-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="login-username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -202,27 +202,17 @@ export function LoginDialog() {
           <TabsContent value="signup" className="space-y-4">
             <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signup-name">Full Name</Label>
+                <Label htmlFor="signup-username">Username</Label>
                 <Input
-                  id="signup-name"
+                  id="signup-username"
                   type="text"
-                  placeholder="Enter your full name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
-                <Input
-                  id="signup-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+             
               <div className="space-y-2">
                 <Label htmlFor="signup-password">Password</Label>
                 <Input
@@ -269,17 +259,7 @@ export function LoginDialog() {
           {/* Forgot Password Tab */}
           <TabsContent value="forgot" className="space-y-4">
             <form onSubmit={handleForgotPassword} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="forgot-email">Email</Label>
-                <Input
-                  id="forgot-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+            
               {error && (
                 <p className="text-sm text-red-500">{error}</p>
               )}

@@ -59,25 +59,19 @@ export default function AccountPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src="/placeholder-user.jpg" alt={user.name} />
+                    <AvatarImage src="/placeholder-user.jpg" alt={user.username} />
                     <AvatarFallback className="text-lg">
-                      {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-lg">{user.name}</h3>
+                    <h3 className="font-semibold text-lg">{user.username}</h3>
                     <Badge variant="secondary">Premium Member</Badge>
                   </div>
                 </div>
                 <Separator />
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm font-medium">Email</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
-                    </div>
-                  </div>
+                  
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>

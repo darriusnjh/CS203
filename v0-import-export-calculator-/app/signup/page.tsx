@@ -12,8 +12,7 @@ import { UserPlus, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    username: '',
     password: '',
     confirmPassword: ''
   })
@@ -34,18 +33,11 @@ export default function SignupPage() {
   }
 
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      setError('Full name is required')
+    if (!formData.username.trim()) {
+      setError('Username is required')
       return false
     }
-    if (!formData.email.trim()) {
-      setError('Email is required')
-      return false
-    }
-    if (!formData.email.includes('@')) {
-      setError('Please enter a valid email address')
-      return false
-    }
+
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long')
       return false
@@ -66,8 +58,8 @@ export default function SignupPage() {
 
     setIsLoading(true)
     try {
-      const result = await signup(formData.email, formData.password, formData.name)
-      
+      const result = await signup(formData.username, formData.password)
+
       if (result.success) {
         setSuccess(result.message)
         setTimeout(() => {
@@ -86,7 +78,7 @@ export default function SignupPage() {
   return (
     <div className="bg-background">
       <NavigationHeader />
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto">
           {/* Page Header */}
@@ -115,30 +107,19 @@ export default function SignupPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="username">Username</Label>
                   <Input
-                    id="name"
-                    name="name"
+                    id="username"
+                    name="username"
                     type="text"
-                    placeholder="Enter your full name"
-                    value={formData.name}
+                    placeholder="Enter your username"
+                    value={formData.username}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+
 
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
@@ -185,9 +166,9 @@ export default function SignupPage() {
                   </div>
                 )}
 
-                <Button 
-                  type="submit" 
-                  className="w-full" 
+                <Button
+                  type="submit"
+                  className="w-full"
                   disabled={isLoading}
                 >
                   {isLoading ? (

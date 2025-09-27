@@ -16,14 +16,14 @@ import com.tariff.app.service.UserService;
 import io.jsonwebtoken.Claims;
 
 @RestController
-@RequestMapping("/api/login")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/user")
+// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    // TODO check if user is already logged in, if yes refuse api
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
             @RequestBody UserLoginRequest request) {
@@ -67,7 +67,6 @@ public class UserController {
 
     }
 
-    // TODO logout
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck) {
 
@@ -85,6 +84,23 @@ public class UserController {
         ResponseCookie cookie = JwtService.createEmptyCookie();
 
         return ResponseEntity.status(204).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> profile(@CookieValue(name = "jwt", defaultValue = "") String cookieCheck) {
+
+        // Check if user has cookies
+        if (!cookieCheck.equals("")) {
+            Claims claim = JwtService.validateJwtandReturnClaim(cookieCheck);
+            if (claim != null) {
+                String username = claim.getSubject();
+
+                //TODO change return to something more useful
+                return ResponseEntity.ok( username);
+            }
+
+        }
+        return ResponseEntity.status(401).body("Unauthorized");
     }
 
 }
