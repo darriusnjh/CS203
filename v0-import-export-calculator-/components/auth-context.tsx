@@ -4,10 +4,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 
 interface User {
   id: string
-  user_id: string
   username: string
-  createdAt: string
-  updatedAt: string
+  user_id?: string
+  createdAt?: string
+  updatedAt?: string
   lastLogin?: string
 }
 

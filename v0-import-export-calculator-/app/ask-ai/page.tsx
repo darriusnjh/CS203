@@ -219,7 +219,7 @@ export default function AskAIPage() {
                     {message.isUser && (
                       <Avatar className="h-8 w-8">
                         <AvatarFallback className="bg-secondary text-secondary-foreground">
-                          {user?.email?.charAt(0).toUpperCase() || "U"}
+                          {user?.username?.[0]?.toUpperCase() ?? "U"}
                         </AvatarFallback>
                       </Avatar>
                     )}
