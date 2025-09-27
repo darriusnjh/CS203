@@ -13,7 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tariff")
 // @CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://localhost:3000", allowCredentials = "true")
+
 
 public class TariffController {
     

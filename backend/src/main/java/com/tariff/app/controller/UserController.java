@@ -20,7 +20,7 @@ import io.jsonwebtoken.Claims;
 @RestController
 @RequestMapping("/api/user")
 // @CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -109,7 +109,7 @@ public class UserController {
     public ResponseEntity<ChangePasswordResponse> changePassword(
             @CookieValue(name = "jwt", defaultValue = "") String cookieCheck,
             @RequestBody ChangePasswordRequest request) {
-        
+        System.err.println("cookie: " + cookieCheck);
         // Check if user has valid JWT
         if (cookieCheck.equals("")) {
             return ResponseEntity.status(401).body(new ChangePasswordResponse(false, "Not authenticated"));

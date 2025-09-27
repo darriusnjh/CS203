@@ -60,10 +60,10 @@ export default function SettingsPage() {
     try {
       const response = await fetch('http://localhost:8080/api/user/change-password', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
         body: JSON.stringify({
           currentPassword,
           newPassword,
@@ -71,6 +71,8 @@ export default function SettingsPage() {
       })
       
       const data = await response.json()
+
+      console.log(data)    
       
       if (response.ok && data.success) {
         setPasswordMessage('Password changed successfully!')
